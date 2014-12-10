@@ -107,6 +107,11 @@
             <artifactId>httpclient</artifactId>
             <version>4.3.4</version>
         </dependency>
+          <dependency>
+            <groupId>org.apache.http.entity</groupId>
+            <artifactId>http</artifactId>
+            <version>4.3.4</version>
+        </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
