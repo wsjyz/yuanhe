@@ -19,11 +19,5 @@ public class UserOrderController {
 		return getUserOrderList();
 	}
 	
-	private void NewOrder(UserOrder userOrder,List<UserOrder> userOrderOldList ){
-		for (UserOrder userOrder2 : userOrderOldList) {
-			if (userOrder.getOrderId().equals(userOrder2.getOrderId()) && userOrder2.getOrderStatus().equals("REFUND")) {
-				
-			}
-		}
-	}
+	
 }
