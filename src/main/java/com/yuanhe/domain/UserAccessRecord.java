@@ -3,7 +3,7 @@ package com.yuanhe.domain;
 import com.yuanhe.domain.annotation.Column;
 import com.yuanhe.domain.annotation.Table;
 
-@Table(name = "t_yuanhe_user_ access_record", comment = "用户访问记录")
+@Table(name = "t_yuanhe_user_access_record", comment = "用户访问记录")
 public class UserAccessRecord extends BaseDomain {
 	/**
 	 * 
