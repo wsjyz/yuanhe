@@ -9,7 +9,7 @@ public class UserOrder extends BaseDomain {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	@Column(name = "order_id", comment = "订单ID", length = 32)
+	@Column(name = "order_id", pk = true, comment = "订单ID", length = 32)
 	private String orderId;
 	@Column(name = "payment_union_id", comment = "付款人union_id", length = 3)
 	private String paymentUnionId;

@@ -2,7 +2,7 @@ package com.yuanhe.service;
 
 import java.util.List;
 
-import com.yuanhe.eighth.domain.UserOrder;
+import com.yuanhe.domain.UserOrder;
 
 public interface UserOrderService {
 

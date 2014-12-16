@@ -11,10 +11,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.ContentBody;
-import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 public class KdtApiClient {
@@ -59,14 +55,14 @@ public class KdtApiClient {
     	httppost.addHeader("User-Agent", DefaultUserAgent);
     	
     	if(null != filePaths && filePaths.size() > 0 && null != fileKey && !"".equals(fileKey)){
-	    	MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-	    	for(int i = 0; i < filePaths.size(); i++){
-	    		File file = new File(filePaths.get(i));
-	    		ContentBody cbFile = new FileBody(file);
-	            mpEntity.addPart(fileKey, cbFile);
-	    	}
-	        
-	        httppost.setEntity(mpEntity);
+//	    	MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+//	    	for(int i = 0; i < filePaths.size(); i++){
+//	    		File file = new File(filePaths.get(i));
+//	    		ContentBody cbFile = new FileBody(file);
+//	            mpEntity.addPart(fileKey, cbFile);
+//	    	}
+//
+//	        httppost.setEntity(mpEntity);
     	}
     	
         System.out.println("executing request " + httppost.getRequestLine());

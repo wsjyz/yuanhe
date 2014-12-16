@@ -9,7 +9,7 @@ public class UserAccessRecord extends BaseDomain {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	@Column(name = "record_id", comment = "主键ID", length = 32)
+	@Column(name = "record_id", pk = true, comment = "主键ID", length = 32)
 	private String recordId;
 	@Column(name = "visiter_union_id", comment = "用户访问unionId", length = 3)
 	private String visiterUnionId;

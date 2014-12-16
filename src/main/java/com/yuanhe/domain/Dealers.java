@@ -9,7 +9,7 @@ public class Dealers extends BaseDomain {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	@Column(name = "dealers_id", comment = "经销商ID", length = 32)
+	@Column(name = "dealers_id", pk = true, comment = "经销商ID", length = 32)
 	private String dealersId;
 	@Column(name = "dealers_name", comment = "经销商名称", length = 3)
 	private String dealersName;
