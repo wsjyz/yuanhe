@@ -8,7 +8,7 @@ public interface DealersService {
 
     List<Dealers> findDealerList(long start,long end);
 
-    int saveDelearBatch(List<Dealers> dealersList);
+    int saveDelearBatch();
 
     int findDealerCount();
 }

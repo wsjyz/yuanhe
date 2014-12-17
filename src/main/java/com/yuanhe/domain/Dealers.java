@@ -11,18 +11,20 @@ public class Dealers extends BaseDomain {
 	private static final long serialVersionUID = 1L;
 	@Column(name = "dealers_id", pk = true, comment = "经销商ID", length = 32)
 	private String dealersId;
-	@Column(name = "dealers_name", comment = "经销商名称", length = 3)
+	@Column(name = "dealers_name", comment = "经销商名称", length = 50)
 	private String dealersName;
-	@Column(name = "dealers_mobile", comment = "经销商电话", length = 3)
+	@Column(name = "dealers_mobile", comment = "经销商电话", length = 11)
 	private String dealersMobile;
-	@Column(name = "dealers_status", comment = "经销商状态", length = 3)
+	@Column(name = "dealers_status", comment = "经销商状态", length = 10)
 	private String dealersStatus;
-	@Column(name = "dealers_type", comment = "经销商类型（实体经销商、网络经销商）", length = 3)
+	@Column(name = "dealers_type", comment = "经销商类型（实体经销商、网络经销商）", length = 10)
 	private String dealersType;
-	@Column(name = "dealers_qr_code", comment = "经销商二维码scene_idID", length = 3)
+	@Column(name = "dealers_qr_code", comment = "经销商二维码scene_idID", length = 10)
 	private String dealersQrCode;
-	@Column(name = "dealers_qr_url", comment = "经销商二维码URL", length = 3)
+	@Column(name = "dealers_qr_url", comment = "经销商二维码URL", length = 50)
 	private String dealersQrUrl;
+    @Column(name = "parent_id", comment = "父级id", length = 32)
+    private String parentId;
 
 	public String getDealersId() {
 		return dealersId;
@@ -80,4 +82,11 @@ public class Dealers extends BaseDomain {
 		this.dealersQrUrl = dealersQrUrl;
 	}
 
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
 }

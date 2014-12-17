@@ -34,10 +34,7 @@
                 "sPaginationType": "full_numbers",
                 "bProcessing": true,
                 "sAjaxSource": "${request.contextPath}/dealer/get-list",
-                "fnServerParams": function ( aoData ) {
-                    aoData.push( { "name": "start", "value": 0 } );
-                    aoData.push( { "name": "end", "value": 10 } );
-                },
+
                 "bServerSide": true,
                 "aoColumns": [
                     { "mData": "dealersName" },
@@ -58,7 +55,16 @@
                 ]
             } );
 
-
+            $('#syncBtn').click(function(){
+                $.ajax({
+                    url: "${request.contextPath}/dealer/sync-from-weixin"
+                }).done(function(result) {
+                    alert("同步了"+result+"条数据");
+                    window.location.reload();
+                }).fail(function(){
+                    alert("同步失败");
+                });
+            });
         } );
 
     </script>
@@ -70,7 +76,12 @@
     <div class="content" style="height: auto; width: auto;"></div>
 </div>
 <div >
+    <div style="margin-top:20px;margin-bottom: 20px;">
+        <input id="syncBtn" type="button" value="同步经销商信息"/>
 
+        <input id="shareLinkBtn" type="button" value="添加分享链接"
+               onclick="window.location.href='${request.contextPath}/goods/toadd?goodsId='"/>
+    </div>
     <table cellpadding="0" cellspacing="0" border="0" class="display"  id="example">
         <thead>
         <tr>

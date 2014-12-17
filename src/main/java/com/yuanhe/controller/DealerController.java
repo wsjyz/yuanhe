@@ -29,13 +29,16 @@ public class DealerController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/get-list")
-    public PageModel getGoodsPage(PageModel ptFromPage,@RequestParam long start,@RequestParam long end){
+    @RequestMapping(value = "/sync-from-weixin")
+    public String syncFromWeixin() {
 
-        if(end == -1){
-            end = 0;
-        }
-        List<Dealers> dealersList = dealersService.findDealerList(start,end);
+        return dealersService.saveDelearBatch()+"";
+    }
+    @ResponseBody
+    @RequestMapping(value = "/get-list")
+    public PageModel getGoodsPage(PageModel ptFromPage){
+
+        List<Dealers> dealersList = dealersService.findDealerList(ptFromPage.getiDisplayStart(),ptFromPage.getiDisplayStart()+ptFromPage.getiDisplayLength());
         int count = dealersService.findDealerCount();
         PageModel pt = new PageModel();
         pt.setsEcho(ptFromPage.getsEcho());

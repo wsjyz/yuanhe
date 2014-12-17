@@ -1,6 +1,7 @@
 package com.yuanhe.dao.impl;
 
 import com.yuanhe.domain.Dealers;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import com.yuanhe.dao.DealersDAO;
 
 
 import javax.swing.tree.TreePath;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,22 +30,36 @@ public class DealersDAOImpl extends BaseDAO implements DealersDAO {
     }
 
     @Override
-    public int saveDelearBatch(List<Dealers> dealersList) {
-        List<String> sqls = new ArrayList<String>();
-        for(Dealers dealers:dealersList){
-            StringBuilder topSql = new StringBuilder("insert into ").append(TABLE_NAME)
-                    .append(" (dealers_id,dealers_name,dealers_mobile,dealers_status,dealers_type," +
-                            "dealers_qr_code,dealers_qr_url,opt_time) values('")
-                    .append(dealers.getDealersId() + "','").append(dealers.getDealersName() + "',")
-                    .append(dealers.getDealersMobile() + "','").append(dealers.getDealersStatus() + "',")
-                    .append(dealers.getDealersQrCode() + "','")
-                    .append(dealers.getDealersQrUrl() + ",'").append(dealers.getOptTime() + "')");
-            System.out.println(topSql.toString());
-            sqls.add(topSql.toString());
-        }
+    public int saveDelearBatch(final List<Dealers> dealersList) {
+        //删除原来的
+        StringBuilder delSql = new StringBuilder("delete from ");
+        delSql.append(TABLE_NAME);
+        getJdbcTemplate().execute(delSql.toString());
+        StringBuilder topSql = new StringBuilder("insert into ").append(TABLE_NAME)
+                .append(" (dealers_id,dealers_name,dealers_mobile,dealers_status,dealers_type," +
+                        "dealers_qr_code,dealers_qr_url,opt_time) values(?,?,?,?,?,?,?,?);");
+        int[] result = getJdbcTemplate().batchUpdate(topSql.toString(),new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                Dealers dealers = dealersList.get(i);
+                ps.setString(1,dealers.getDealersId());
+                ps.setString(2,dealers.getDealersName());
+                ps.setString(3,dealers.getDealersMobile());
+                ps.setString(4,dealers.getDealersStatus());
+                ps.setString(5,dealers.getDealersType());
+                ps.setString(6,dealers.getDealersQrCode());
+                ps.setString(7,dealers.getDealersQrUrl());
+                ps.setString(8,dealers.getOptTime());
+            }
 
-        int[] results =  getJdbcTemplate().batchUpdate(sqls.toArray(new String[sqls.size()]));
-        return results.length;
+            @Override
+            public int getBatchSize() {
+                return dealersList.size();
+            }
+        });
+
+        return result.length;
+
     }
 
     @Override
