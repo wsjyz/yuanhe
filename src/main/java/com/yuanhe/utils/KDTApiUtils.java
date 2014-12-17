@@ -13,15 +13,13 @@ import org.apache.http.HttpResponse;
 /*
  * 这是个例子
  */
-public class KDTApiTest {
-	private static final String APP_ID = "app_id"; //这里换成你的app_id
-	private static final String APP_SECRET = "app_secret"; //这里换成你的app_secret
+public class KDTApiUtils {
+	private static final  String APP_ID = "wx805e0d1e1ff4c357"; //这里换成你的app_id
+	private static final String APP_SECRET = "e4be73256423d9c76b941d815ff735df"; //这里换成你的app_secret
 	
-	public static void main(String[] args){
-		sendOrderList();
-	}
+
 	
-	private static void sendOrderList(){
+	public void sendOrderList(){
 		String method = "kdt.trades.sold.get";
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("end_update", new Date().toString());
