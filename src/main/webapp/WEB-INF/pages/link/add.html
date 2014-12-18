@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>添加链接</title>
+    <link rel="stylesheet" href="${request.contextPath}/css/bootstrap.min.css" />
+    <script src="${request.contextPath}/js/jquery-2.0.0.min.js"></script>
+    <script src="${request.contextPath}/js/bootstrap.min.js"></script>
+    <script type="text/javascript" language="javascript" src="${request.contextPath}/js/jquery.dataTables.min.js"></script>
+    <style>
+        @import "${request.contextPath}/css/demo_page.css";
+        @import "${request.contextPath}/css/demo_table_jui.css";
+        @import "${request.contextPath}/css/jquery-ui-1.8.4.custom.css";
+        .dataTables_info { padding-top: 0;font-size: 0.8em }
+        .dataTables_paginate { padding-top: 0; }
+        .css_right { float: right; }
+        #example_wrapper .fg-toolbar { font-size: 0.8em }
+        #theme_links span { float: left; padding: 2px 10px; }
+        .toolbar {
+            float: left;font-size: 0.8em
+        }
+        #center{
+            position: absolute;
+            width:800px;
+            height:200px;
+            left:20%;
+            top:10%;
+        }
+        .center {
+            width: auto;
+            display: table;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+    <script type="text/javascript" charset="utf-8">
+
+        $(document).ready(function() {
+            var oTable = $('#example').dataTable( {
+                "bJQueryUI": true,
+                "sPaginationType": "full_numbers",
+                "bProcessing": true,
+                "sAjaxSource": "${request.contextPath}/promote-link/get-list",
+
+                "bServerSide": true,
+                "aoColumns": [
+                    { "mData": "linkTitle" },
+                    { "mData": "linkUrl" },
+                    { "mData": "optTime" },
+                    { "mData": "linkId" }
+                ],
+                "aoColumnDefs": [
+                    {
+                        "mRender": function ( data, type, row ) {
+                            return '<a href ="#" onclick="deleteLink(\''+data+'\')">删除</a>'+'&nbsp;';
+                        },
+                        "aTargets": [ 3 ]
+                    }
+                ]
+            } );
+
+
+        } );
+        function deleteLink(linkId){
+            if(confirm("确定要删除吗？")){
+                $.ajax({
+                    url: "${request.contextPath}/promote-link/delete",
+                    data:{linkId:linkId}
+                }).done(function(result) {
+                    window.location.reload();
+                })
+            }
+        }
+    </script>
+</head>
+<body>
+<iframe name="resultiframe" src="" style="border: 0px;">${result}</iframe>
+<div id="container" class="center">
+    <form class="form-horizontal" action="${request.contextPath}/promote-link/add" target="resultiframe">
+        <fieldset>
+            <div id="legend" class="">
+                <legend class="">表单名</legend>
+            </div>
+            <div class="control-group">
+
+                <!-- Text input-->
+                <label class="control-label" for="input01">链接名称</label>
+                <div class="controls">
+                    <input type="text" name="linkTitle" placeholder="链接名称" class="input-xlarge">
+
+                </div>
+            </div>
+            <div class="control-group">
+
+                <!-- Text input-->
+                <label class="control-label" for="input01">链接URL</label>
+                <div class="controls">
+                    <input type="text" name="linkUrl" placeholder="链接URL" class="input-xlarge">
+
+                </div>
+            </div>
+            <div class="control-group">
+                <!-- Button -->
+                <div class="controls">
+                    <input type="submit" class="btn btn-default" value="保存"/>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+
+</div>
+<table cellpadding="0" cellspacing="0" border="0" class="display"  id="example">
+    <thead>
+    <tr>
+        <th width="35%">链接名称</th>
+        <th width="40%">链接URL</th>
+        <th width="15%">操作时间</th>
+        <th width="20%">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+
+</table>
+</body>
+</html>

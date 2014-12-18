@@ -10,7 +10,7 @@ import com.yuanhe.utils.KDTApiUtils;
 
 @Component
 public class UserOrderTask {
-	 @Scheduled(cron="0/5 * *  * * ? ")   //每5秒执行一次  
+	 @Scheduled(cron="0/5 * 0/5  * * ? ")   //每5秒执行一次
 	public void getNewUserOrder() {
 		System.out.println("进入订单获取");
 		KDTApiUtils apiUtils=new KDTApiUtils();
