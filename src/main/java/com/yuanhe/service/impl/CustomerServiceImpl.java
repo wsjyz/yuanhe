@@ -15,8 +15,8 @@ public class CustomerServiceImpl implements CustomerService {
 	CustomerDAO customerDao;
 
 	@Override
-	public List<Customer> getCustomerList(String userUnionId) {
-		return customerDao.getCustomerList(userUnionId);
+	public Customer getCustomerById(String userUnionId) {
+		return customerDao.getCustomerById(userUnionId);
 	}
 
 	@Override

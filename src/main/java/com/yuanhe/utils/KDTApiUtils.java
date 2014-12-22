@@ -46,7 +46,7 @@ public class KDTApiUtils {
 			Integer total_results = responseObject.getInteger("total_results");
 			if (total_results!=null && total_results>0) {
 				JSONArray data=responseObject.getJSONArray("trades");
-				for (int i = 0; i < total_results; i++) {
+				for (int i =0; i < data.size(); i++) {
 					JSONObject info=data.getJSONObject(i);
 					String status=info.getString("status");
 					//只有买家已付款 或者卖家已
@@ -86,10 +86,9 @@ public class KDTApiUtils {
 			}
 			JSONObject  dataJson=JSONObject.parseObject(result.toString());
 			JSONObject  responseObject=dataJson.getJSONObject("response");
-			JSONArray data=responseObject.getJSONArray("user");
-			JSONObject info=data.getJSONObject(0);
-			userOrder.setWeixin_openid(info.getString("weixin_openid")); 
-			userOrder.setPaymentWeixinNick(info.getString("nick"));
+			JSONObject data=responseObject.getJSONObject("user");
+			userOrder.setWeixin_openid((String) data.get("weixin_openid")); 
+			userOrder.setPaymentWeixinNick((String) data.get("nick"));
 
 		} catch (Exception e) {
 			e.printStackTrace();

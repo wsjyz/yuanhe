@@ -22,4 +22,56 @@ public class UserAccessRecord extends BaseDomain {
 	@Column(name = "access_url", comment = "访问的链接地址", length = 3)
 	private String accessUrl;
 
+	public String getRecordId() {
+		return recordId;
+	}
+
+	public void setRecordId(String recordId) {
+		this.recordId = recordId;
+	}
+
+	public String getVisiterUnionId() {
+		return visiterUnionId;
+	}
+
+	public void setVisiterUnionId(String visiterUnionId) {
+		this.visiterUnionId = visiterUnionId;
+	}
+
+	public String getVisiterDealersId() {
+		return visiterDealersId;
+	}
+
+	public void setVisiterDealersId(String visiterDealersId) {
+		this.visiterDealersId = visiterDealersId;
+	}
+
+	public String getVisitTime() {
+		return visitTime;
+	}
+
+	public void setVisitTime(String visitTime) {
+		this.visitTime = visitTime;
+	}
+
+	public String getAccessUrlTitle() {
+		return accessUrlTitle;
+	}
+
+	public void setAccessUrlTitle(String accessUrlTitle) {
+		this.accessUrlTitle = accessUrlTitle;
+	}
+
+	public String getAccessUrl() {
+		return accessUrl;
+	}
+
+	public void setAccessUrl(String accessUrl) {
+		this.accessUrl = accessUrl;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 }

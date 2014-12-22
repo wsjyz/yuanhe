@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.yuanhe.dao.BaseDAO;
 import com.yuanhe.dao.CustomerDAO;
@@ -18,12 +19,15 @@ import com.yuanhe.domain.Customer;
 public class CustomerDAOImpl extends BaseDAO implements CustomerDAO {
 
 	@Override
-	public List<Customer> getCustomerList(String userUnionId) {
+	public Customer getCustomerById(String userUnionId) {
 		StringBuilder sql = new StringBuilder(
-				"select * from t_yuanhe_customer ");
+				"select * from t_yuanhe_customer where customer_union_id ='"+userUnionId+"'");
 		List<Customer> customerList = getJdbcTemplate().query(sql.toString(),
 				new String[] {}, new CustomerRowMapper());
-		return customerList;
+		if (CollectionUtils.isEmpty(customerList)) {
+			return null;
+		}
+		return customerList.get(0);
 	}
 
 	public class CustomerRowMapper implements RowMapper<Customer> {
