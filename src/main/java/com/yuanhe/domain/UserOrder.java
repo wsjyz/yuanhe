@@ -32,6 +32,25 @@ public class UserOrder extends BaseDomain {
 	@Column(name = "order_money", comment = "计算金额 = 实付金额 - 邮费 - 税金", length = 3)
 	private String orderMoney;
 
+	private String weixin_user_id;
+	private String weixin_openid;
+
+	public void setWeixin_openid(String weixin_openid) {
+		this.weixin_openid = weixin_openid;
+	}
+
+	public String getWeixin_openid() {
+		return weixin_openid;
+	}
+
+	public void setWeixin_user_id(String weixin_user_id) {
+		this.weixin_user_id = weixin_user_id;
+	}
+
+	public String getWeixin_user_id() {
+		return weixin_user_id;
+	}
+
 	public String getOrderId() {
 		return orderId;
 	}

@@ -83,4 +83,5 @@ public class WeixinUtils {
         v.obtainAccessToken();
         System.out.println(v.getAccessToken());
     }
+    
 }
