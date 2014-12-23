@@ -120,11 +120,15 @@ public class StringUtil {
         return resultString;
     }
     public static void main(String[] args) {
-        String chat_sign = "92C3402B75AF4B5084639880DFA96DCF|/v1/im/message/savePrivateMsgs|92C3402B75AF4B5084639880DFA96DCF";
+        String apps = "2E669A6340E94F67B5DBAE53A84572DF";//yufa
+        String chat_sign = apps+"|/v1/uc/user/isLoginAndReturnOpenUser|"+apps;
+        String record_sign = apps+"|/v1/im/message/listPrivateMsgs|"+apps;
+        String msg_sign = apps+"|/v1/im/message/savePrivateMsgs|"+apps;
 
-        System.out.println(StringUtil.getMD5(chat_sign).toUpperCase());
-        System.out.println(StringUtil.getMD5Str(chat_sign).toUpperCase());
+
         System.out.println(StringUtil.GetMD5Code(chat_sign).toUpperCase());
+        System.out.println(StringUtil.GetMD5Code(record_sign).toUpperCase());
+        System.out.println(StringUtil.GetMD5Code(msg_sign).toUpperCase());
     }
 
 }
