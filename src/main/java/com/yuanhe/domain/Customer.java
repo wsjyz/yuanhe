@@ -13,7 +13,7 @@ public class Customer extends BaseDomain {
 	private String customerUnionId;
 	@Column(name = "customer_nick", comment = "顾客昵称", length = 50)
 	private String customerNick;
-	@Column(name = "customer_pic", comment = "顾客头像", length = 50)
+	@Column(name = "customer_pic", comment = "顾客头像", length = 200)
 	private String customerPic;
 	@Column(name = "customer_provice", comment = "省份", length = 50)
 	private String customerProvice;

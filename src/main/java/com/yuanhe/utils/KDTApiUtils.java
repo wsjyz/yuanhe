@@ -50,14 +50,22 @@ public class KDTApiUtils {
 					JSONObject info=data.getJSONObject(i);
 					String status=info.getString("status");
 					//只有买家已付款 或者卖家已
-					if ("WAIT_SELLER_SEND_GOODS".equals(status) || "TRADE_CLOSED".equals(status)) {
+					if ("WAIT_SELLER_SEND_GOODS".equals(status) || "WAIT_SELLER_SEND_GOODS".equals(status) 
+							|| "TRADE_BUYER_SIGNED".equals(status) ||  "TRADE_CLOSED".equals(status)) {
 						UserOrder userOrder=new UserOrder();
-						userOrder.setOrderStatus(info.getString("status"));
-						userOrder.setOrderId(info.getString("num_iid"));
+						if ("WAIT_SELLER_SEND_GOODS".equals(status) || "WAIT_SELLER_SEND_GOODS".equals(status) 
+							|| "TRADE_BUYER_SIGNED".equals(status)) {
+							status=Contants.NORMAL;
+						}else{
+							status=Contants.REFUND;
+						}
+						userOrder.setOrderStatus(status);
+						userOrder.setOrderId(info.getString("tid"));
 						userOrder.setRealPay(info.getString("payment"));
 						userOrder.setPostageMoney(info.getString("post_fee"));
 						userOrder.setWeixin_user_id(info.getString("weixin_user_id"));
 						sendUserByWeixinUserId(userOrder.getWeixin_user_id(), userOrder);
+						userOrderList.add(userOrder);
 					}
 					
 				}
