@@ -26,7 +26,7 @@ public class UserOrderTask {
 	@Autowired
 	UserAccessRecordService userAccessRecordService;
 
-	@Scheduled(cron = "0/5 * *  * * ? ")
+	@Scheduled(cron = "0/50 * *  * * ? ")
 	public void getNewUserOrder() {
 		System.out.println("进入订单获取");
 		KDTApiUtils apiUtils = new KDTApiUtils();
@@ -53,13 +53,14 @@ public class UserOrderTask {
 			}
 		} else {
 			WerxinGetUser werxinGetUser = new WerxinGetUser();
-			setUserOrderByCustomer(userOrder,werxinGetUser);
-			String params="";
-			String sendGet = werxinGetUser.sendPostByEmail(params,werxinGetUser.getTokenByStore());
+			Customer customer=new Customer();
+			setUserOrderByCustomer(userOrder,werxinGetUser,customer);
+			String params = "{\"touser\": \""+customer.getCustomerDealers()+"\",\"toparty\": \""+customer.getCustomerDealers()+"\",\"totag\": \""+3+"\",\"msgtype\": \"text\",\"agentid\": \"1\",\"text\": {\"content\": \"Holiday Request For Pony(http://xxxxx)\"},\"safe\":\"0\"}";
+			werxinGetUser.sendPostByEmail(params,werxinGetUser.getTokenByShop());
 		}
 	}
 
-	private void setUserOrderByCustomer(UserOrder userOrder,WerxinGetUser werxinGetUser) {
+	private void setUserOrderByCustomer(UserOrder userOrder,WerxinGetUser werxinGetUser,Customer customer) {
 		// 如果是新订单则生成订单且检查订单用户
 		// 获取订单用户信息
 	
@@ -70,7 +71,7 @@ public class UserOrderTask {
 		String userUnionId = jsonObj.getString("unionid");
 		String visiterDealersId = null;
 		// 检查买家是否是第一次购买
-		Customer customer = customerService.getCustomerById(userUnionId);
+		customer = customerService.getCustomerById(userUnionId);
 		String xiaoshouId = null;
 		String huiyuanID = null;
 		if (customer == null) {

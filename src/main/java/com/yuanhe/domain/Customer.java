@@ -11,17 +11,17 @@ public class Customer extends BaseDomain {
 	private static final long serialVersionUID = 1L;
 	@Column(name = "customer_union_id", pk = true, comment = "顾客union_id", length = 32)
 	private String customerUnionId;
-	@Column(name = "customer_nick", comment = "顾客昵称", length = 3)
+	@Column(name = "customer_nick", comment = "顾客昵称", length = 50)
 	private String customerNick;
-	@Column(name = "customer_pic", comment = "顾客头像", length = 3)
+	@Column(name = "customer_pic", comment = "顾客头像", length = 50)
 	private String customerPic;
-	@Column(name = "customer_provice", comment = "省份", length = 3)
+	@Column(name = "customer_provice", comment = "省份", length = 50)
 	private String customerProvice;
-	@Column(name = "customer_dealers", comment = "顾客所属会员", length = 3)
+	@Column(name = "customer_dealers", comment = "顾客所属会员", length = 32)
 	private String customerDealers;
-	@Column(name = "open_id", comment = "商城openID", length = 3)
+	@Column(name = "open_id", comment = "商城openID", length = 32)
 	private String openId;
-	@Column(name = "ouath_open_id", comment = "OuathOpenID", length = 3)
+	@Column(name = "ouath_open_id", comment = "OuathOpenID", length = 32)
 	private String ouathOpenId;
 
 	public String getCustomerUnionId() {
