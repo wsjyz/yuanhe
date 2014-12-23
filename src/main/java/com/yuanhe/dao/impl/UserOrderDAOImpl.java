@@ -2,13 +2,13 @@ package com.yuanhe.dao.impl;
 
 import com.yuanhe.domain.UserOrder;
 
+import com.yuanhe.utils.Contants;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Service;
 
 import com.yuanhe.dao.BaseDAO;
 import com.yuanhe.dao.UserOrderDAO;
-import com.yuanhe.utils.contants;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -66,7 +66,7 @@ public class UserOrderDAOImpl extends BaseDAO implements UserOrderDAO {
 				ps.setString(1, orderId);
 				ps.setString(2, userOrder.getPaymentUnionId());
 				ps.setString(3, userOrder.getPaymentWeixinNick());
-				ps.setString(4, contants.NORMAL);
+				ps.setString(4, Contants.NORMAL);
 				ps.setString(5, userOrder.getBelongsSalesCommission());
 				ps.setString(6, userOrder.getSalesCommissionMoney());
 				ps.setString(7, userOrder.getBelongsMembersCommission());

@@ -15,7 +15,7 @@ import com.yuanhe.service.UserAccessRecordService;
 import com.yuanhe.service.UserOrderService;
 import com.yuanhe.utils.KDTApiUtils;
 import com.yuanhe.utils.WerxinGetUser;
-import com.yuanhe.utils.contants;
+import com.yuanhe.utils.Contants;
 
 @Component
 public class UserOrderTask {
@@ -42,7 +42,7 @@ public class UserOrderTask {
 			// 如果订单被退回则修改订单信息
 			for (UserOrder userOrder2 : userOrderOldList) {
 				if (userOrder.getOrderId().equals(userOrder2.getOrderId())) {
-					userOrder2.setOrderStatus(contants.REFUND);
+					userOrder2.setOrderStatus(Contants.REFUND);
 					userOrder2.setSalesCommissionMoney("0");
 					userOrder2.setMembersCommissionMoney("0");
 					userOrder2.setRealPay("0");
