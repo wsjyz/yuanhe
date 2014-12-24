@@ -16,17 +16,29 @@ public class WeixinUtils {
 
     protected static Logger logger = Logger.getLogger(WeixinUtils.class);
 
-    public static WeixinCorpAccessTokenBean weixinCorpAccessTokenBean;
+    public static WeixinAccessTokenBean weixinCorpAccessTokenBean;
+
+    public static WeixinAccessTokenBean weixinAccessTokenBean;
 
     private static final String CORPID = "wxfb5ee1afc560a3be";
 
     private static final String CORPSECRET = "y29rsSXWXEShXkmyBx8mskVSNonvSqvqzQWqMWGbRIXtMkiWxbKRVLRDYqykB2tI";
 
-    public String obtainAccessToken(){
+    private static final String APPID = "wx805e0d1e1ff4c357";
 
-        weixinCorpAccessTokenBean = new WeixinCorpAccessTokenBean();
+    private static final String SECRET = "e4be73256423d9c76b941d815ff735df";
+
+    public void findAccessToken(){
+        obtainCorpAccessToken();
+        obtainAccessToken();
+    }
+
+    public String obtainCorpAccessToken(){
+
+        weixinCorpAccessTokenBean = new WeixinAccessTokenBean();
         //获取accesstoken
         HTTPSClient client = new HTTPSClient();
+        client.setSERVER_HOST_URL("https://qyapi.weixin.qq.com/cgi-bin/");
         client.setServiceUri("gettoken");
         Map<String,Object> params = new HashMap<String,Object>();
         params.put("corpid",CORPID);
@@ -45,19 +57,54 @@ public class WeixinUtils {
         }
         return weixinCorpAccessTokenBean.getAccessToken();
     }
+    public String obtainAccessToken(){
 
-    public String getAccessToken(){
-        WeixinCorpAccessTokenBean tokenBean = WeixinUtils.weixinCorpAccessTokenBean;
+        weixinAccessTokenBean = new WeixinAccessTokenBean();
+        //获取accesstoken
+        HTTPSClient client = new HTTPSClient();
+        client.setSERVER_HOST_URL("https://api.weixin.qq.com/cgi-bin/");
+        client.setServiceUri("token");
+        Map<String,Object> params = new HashMap<String,Object>();
+        params.put("appid",APPID);
+        params.put("secret",SECRET);
+        params.put("grant_type","client_credential");
+        client.setParams(params);
+        String responseStr = client.request();
+        Map<String,String> responseMap = JSON.parseObject(responseStr,new TypeReference<Map<String, String>>(){});
+
+        if(responseMap.get("errcode") == null){
+            String accessToken = responseMap.get("access_token");
+            weixinAccessTokenBean.setAccessToken(accessToken);
+            weixinAccessTokenBean.setExpireTime(new Date().getTime() + 1000 * 7200);
+            logger.info("获取公众号AccessToken成功"+accessToken);
+        }else{
+            logger.info("获取公众号AccessToken错误:"+responseStr);
+        }
+        return weixinAccessTokenBean.getAccessToken();
+    }
+
+    public String getCorpAccessToken(){
+        WeixinAccessTokenBean tokenBean = WeixinUtils.weixinCorpAccessTokenBean;
         long currentTime = new Date().getTime();
 
         if(tokenBean != null && tokenBean.getExpireTime() > currentTime){
             return tokenBean.getAccessToken();
         }else{
-            return obtainAccessToken();
+            return obtainCorpAccessToken();
+        }
+    }
+    public String getAccessToken(){
+        WeixinAccessTokenBean tokenBean = WeixinUtils.weixinAccessTokenBean;
+        long currentTime = new Date().getTime();
+
+        if(tokenBean != null && tokenBean.getExpireTime() > currentTime){
+            return tokenBean.getAccessToken();
+        }else{
+            return obtainCorpAccessToken();
         }
     }
 
-    private class WeixinCorpAccessTokenBean {
+    private class WeixinAccessTokenBean {
 
         private String accessToken;
         private long expireTime;
@@ -78,10 +125,11 @@ public class WeixinUtils {
             this.expireTime = expireTime;
         }
     }
+
     public static void main(String[] args) {
         WeixinUtils v = new WeixinUtils();
-        v.obtainAccessToken();
-        System.out.println(v.getAccessToken());
+        v.obtainCorpAccessToken();
+        System.out.println(v.getCorpAccessToken());
     }
     
 }

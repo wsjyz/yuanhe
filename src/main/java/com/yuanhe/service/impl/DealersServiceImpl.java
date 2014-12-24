@@ -2,13 +2,10 @@ package com.yuanhe.service.impl;
 
 import com.yuanhe.dao.DealersDAO;
 import com.yuanhe.domain.Dealers;
-import com.yuanhe.weixin.DepartmentService;
-import com.yuanhe.weixin.UserService;
+import com.yuanhe.weixin.CorpUserService;
 import com.yuanhe.weixin.bean.CorpUser;
 import com.yuanhe.weixin.bean.CorpUserResponse;
-import com.yuanhe.weixin.bean.Department;
-import com.yuanhe.weixin.bean.DepartmentResponse;
-import com.yuanhe.weixin.proxy.RemoteProxy;
+import com.yuanhe.weixin.proxy.WeixinCorpRemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +28,8 @@ public class DealersServiceImpl implements DealersService {
     @Override
     public int saveDelearBatch() {
         List<Dealers> dealersList = new ArrayList<Dealers>();
-        UserService userService = new RemoteProxy<UserService>(UserService.class).getProxy();
-        CorpUserResponse corpUserResponse = userService.simplelist(1,1,0);
+        CorpUserService corpUserService = new WeixinCorpRemoteProxy<CorpUserService>(CorpUserService.class).getProxy();
+        CorpUserResponse corpUserResponse = corpUserService.simplelist(1,1,0);
         for(CorpUser corpUser:corpUserResponse.getUserlist()){
             Dealers dealers = new Dealers();
             dealers.setDealersId(corpUser.getUserid()+"");
@@ -47,4 +44,6 @@ public class DealersServiceImpl implements DealersService {
 
         return dealersDAO.findDealerCount();
     }
+
+
 }

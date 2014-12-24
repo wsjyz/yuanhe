@@ -14,8 +14,11 @@
 		<context:include-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
-	<mvc:annotation-driven />
+
 	<mvc:default-servlet-handler />
+    <mvc:annotation-driven/>
+
+
 
 	<!--转换器 使Controller方法可以自动转换不同格式类型 不加会报400错 -->
 	<bean id="conversionService"
@@ -48,7 +51,7 @@
 				class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
 				<!--这里是是否启用扩展名支持，默认就是true 例如 /user/{userid}.json -->
 				<property name="favorPathExtension" value="false" />
-				<property name="ignoreAcceptHeader" value="true" />
+				<property name="ignoreAcceptHeader" value="false" />
 				<!--这里是是否启用参数支持，默认就是true 例如 /user/{userid}?format=json -->
 				<property name="favorParameter" value="false" />
 				<property name="defaultContentType" value="text/html" />
@@ -81,7 +84,14 @@
 			<list>
 				<bean id="defaultJsonView"
 					class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />
-			</list>
+                <bean id="xmlView"
+                      class="org.springframework.web.servlet.view.xml.MarshallingView">
+                    <property name="marshaller">
+                        <bean class="org.springframework.oxm.xstream.XStreamMarshaller"/>
+                    </property>
+                    <property name="contentType" value="application/xml;charset=UTF-8"/>
+                </bean>
+            </list>
 		</property>
 	</bean>
 	<bean id="viewResolverCommon"

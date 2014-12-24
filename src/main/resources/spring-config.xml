@@ -50,5 +50,5 @@
     </tx:advice>
     <tx:annotation-driven/>
 
-    <bean id="weixinUtils" class="com.yuanhe.utils.WeixinUtils" init-method="obtainAccessToken"/>
+    <bean id="weixinUtils" class="com.yuanhe.utils.WeixinUtils" init-method="findAccessToken"/>
 </beans>

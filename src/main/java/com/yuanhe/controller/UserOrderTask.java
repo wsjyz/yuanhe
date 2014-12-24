@@ -26,7 +26,7 @@ public class UserOrderTask {
 	@Autowired
 	UserAccessRecordService userAccessRecordService;
 
-	@Scheduled(cron = "0/5 * *  * * ? ")
+	@Scheduled(cron = "0/5 * *  0/5 * ? ")
 	public void getNewUserOrder() {
 		System.out.println("进入订单获取");
 		KDTApiUtils apiUtils = new KDTApiUtils();

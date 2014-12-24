@@ -25,6 +25,8 @@
     </style>
     <script src="${request.contextPath}/js/jquery-2.0.0.min.js"></script>
     <script type="text/javascript" language="javascript" src="${request.contextPath}/js/jquery.dataTables.min.js"></script>
+    <script src="${request.contextPath}/js/jquery.bpopup.min.js"></script>
+    <script src="${request.contextPath}/js/jquery.livequery.min.js"></script>
 
     <script type="text/javascript" charset="utf-8">
 
@@ -46,15 +48,20 @@
                 "aoColumnDefs": [
                     {
                         "mRender": function ( data, type, row ) {
-                            return '<a href ="#" onclick="toEdit(\''+data+'\')">编辑</a>'+'&nbsp;'+
-                                    '<a href ="#" onclick="deleteGoods(\''+data+'\')">删除</a>'+'&nbsp;'+
-                                    '<a href ="#" onclick="viewPriceList(\''+data+'\')">查看结果</a>';
+                            return '<a href ="#" onclick="viewQrcode(\''+data+'\')">查看二维码</a>';
                         },
                         "aTargets": [ 4 ]
                     }
                 ]
             } );
-
+            $(".b-iframe").livequery(function(){     //一定要有.load等载入完成
+                $(this).load(function(){
+                    var iframeWidth = $(this).contents().find("[id='container']").width();     //获取高度
+                    var iframeHeight = $(this).contents().find("[id='container']").height();
+                    $(this).width(iframeWidth+200);    //iframe高度等于嵌进来html的高度
+                    $(this).height(iframeHeight);
+                });
+            });
             $('#syncBtn').click(function(){
                 $.ajax({
                     url: "${request.contextPath}/dealer/sync-from-weixin"
@@ -65,7 +72,19 @@
                     alert("同步失败");
                 });
             });
+
         } );
+        function viewQrcode(dealerId){
+            $('#popup2').bPopup({
+                content:'iframe', //'ajax', 'iframe' or 'image'
+                contentContainer:'.content',
+                iframeAttr:'scrolling="yes"',
+                loadUrl:'${request.contextPath}/dealer/get-qrcode?dealerId='+dealerId, //Uses jQuery.load()
+                onClose:function(){
+                    //window.location.reload();
+                }
+            });
+        }
 
     </script>
 </head>
@@ -78,7 +97,6 @@
 <div >
     <div style="margin-top:20px;margin-bottom: 20px;">
         <input id="syncBtn" type="button" value="同步经销商信息"/>
-
         <input id="shareLinkBtn" type="button" value="添加分享链接"
                onclick="window.location.href='${request.contextPath}/promote-link/to-add'"/>
     </div>
