@@ -1,13 +1,13 @@
 package com.yuanhe.controller;
 
+import com.yuanhe.domain.Customer;
 import com.yuanhe.domain.Dealers;
 import com.yuanhe.domain.PageModel;
+import com.yuanhe.service.CustomerService;
 import com.yuanhe.service.DealersService;
 import com.yuanhe.weixin.QrcodeService;
-import com.yuanhe.weixin.bean.QrcodeEventBean;
-import com.yuanhe.weixin.bean.QrcodeParams;
-import com.yuanhe.weixin.bean.QrcodeResponse;
-import com.yuanhe.weixin.bean.TextMessage;
+import com.yuanhe.weixin.UserService;
+import com.yuanhe.weixin.bean.*;
 import com.yuanhe.weixin.proxy.WeixinRemoteProxy;
 import com.yuanhe.weixin.util.MessageUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +33,8 @@ public class DealerController {
 
     @Autowired
     private DealersService dealersService;
+    @Autowired
+    private CustomerService customerService;
 
     @RequestMapping(value = "/tolist")
     public String toAddGoods() {
@@ -77,9 +79,18 @@ public class DealerController {
     @ResponseBody
     @RequestMapping(value="/qrcode-event")
     public String qrcodeEvent(HttpServletRequest request){
-        String dealerId = processRequest(request);
-        if(StringUtils.isNotBlank(dealerId)){
-
+        CustomerBean customerBean = processRequest(request);
+        if(StringUtils.isNotBlank(customerBean.getDealerId())){
+            //获取unionid
+            UserService userService = new WeixinRemoteProxy<UserService>(UserService.class).getProxy();
+            WeixinUser weixinUser = userService.info(customerBean.getOpenId(),"zh_CN");
+            //根据unionId查找
+            String unionId = weixinUser.getUnionid();
+            Customer customer = customerService.getCustomerById(unionId);
+            if(StringUtils.isBlank(customer.getCustomerDealers())){
+                customer.setCustomerDealers(customerBean.getDealerId());
+                customerService.updateCustomer(customer);
+            }
         }
         return "success";
     }

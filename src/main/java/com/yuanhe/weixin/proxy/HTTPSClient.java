@@ -162,10 +162,10 @@ public class HTTPSClient {
         HttpClient httpClient = new DefaultHttpClient();
 
         try {
-            HttpPost request = new HttpPost("https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=");
-            StringEntity params =new StringEntity("{\"action_info\":{\"scene\":{\"scene_id\":\"1\"}},\"action_name\":\"QR_LIMIT_SCENE\"}");
+            HttpPost request = new HttpPost("https://api.weixin.qq.com/sns/oauth2/access_token?code=0016f7281ab84ea6fee344f3d689fb2S&appid=wx805e0d1e1ff4c357&secret=a172670e10ca24f85c3f2aa024d8dd99&grant_type=authorization_code");
+           // StringEntity params =new StringEntity("{\"action_info\":{\"scene\":{\"scene_id\":\"1\"}},\"action_name\":\"QR_LIMIT_SCENE\"}");
             request.addHeader("content-type", "application/x-www-form-urlencoded");
-            request.setEntity(params);
+            //request.setEntity(params);
             HttpResponse response = httpClient.execute(request);
             System.out.println(response.toString());
             // handle response here...
@@ -176,4 +176,8 @@ public class HTTPSClient {
         }
     }
 
+    public static void main(String[] args) {
+        HTTPSClient client = new HTTPSClient();
+        client.testjson();
+    }
 }

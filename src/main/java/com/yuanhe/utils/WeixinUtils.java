@@ -26,7 +26,7 @@ public class WeixinUtils {
 
     private static final String APPID = "wx805e0d1e1ff4c357";
 
-    private static final String SECRET = "e4be73256423d9c76b941d815ff735df";
+    private static final String SECRET = "a172670e10ca24f85c3f2aa024d8dd99";
 
     public void findAccessToken(){
         obtainCorpAccessToken();
