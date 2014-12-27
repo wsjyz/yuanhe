@@ -11,15 +11,15 @@ public class UserAccessRecord extends BaseDomain {
 	private static final long serialVersionUID = 1L;
 	@Column(name = "record_id", pk = true, comment = "主键ID", length = 32)
 	private String recordId;
-	@Column(name = "visiter_union_id", comment = "用户访问unionId", length = 3)
+	@Column(name = "visiter_union_id", comment = "用户访问unionId", length = 32)
 	private String visiterUnionId;
-	@Column(name = "visiter_dealers_id", comment = "被访问经销商ID", length = 3)
+	@Column(name = "visiter_dealers_id", comment = "被访问经销商ID", length = 32)
 	private String visiterDealersId;
-	@Column(name = "visit_time", comment = "访问时间", length = 3)
+	@Column(name = "visit_time", comment = "访问时间", length = 50)
 	private String visitTime;
-	@Column(name = "access_url_title", comment = "访问的链接名称", length = 3)
+	@Column(name = "access_url_title", comment = "访问的链接名称", length = 50)
 	private String accessUrlTitle;
-	@Column(name = "access_url", comment = "访问的链接地址", length = 3)
+	@Column(name = "access_url", comment = "访问的链接地址", length = 50)
 	private String accessUrl;
 
 	public String getRecordId() {

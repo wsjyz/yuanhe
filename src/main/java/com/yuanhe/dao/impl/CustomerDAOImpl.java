@@ -90,6 +90,9 @@ public class CustomerDAOImpl extends BaseDAO implements CustomerDAO {
 			sql.append("ouath_open_id='" + customer.getOuathOpenId() + "',");
 
 		}
+		if (sql.lastIndexOf(",") + 1 == sql.length()) {
+			sql.delete(sql.lastIndexOf(","), sql.length());
+		}
 		sql.append(" where customer_union_id='" + customer.getCustomerUnionId()
 				+ "'");
 		getJdbcTemplate().update(sql.toString());

@@ -11,25 +11,25 @@ public class UserOrder extends BaseDomain {
 	private static final long serialVersionUID = 1L;
 	@Column(name = "order_id", pk = true, comment = "订单ID", length = 32)
 	private String orderId;
-	@Column(name = "payment_union_id", comment = "付款人union_id", length = 3)
+	@Column(name = "payment_union_id", comment = "付款人union_id", length = 32)
 	private String paymentUnionId;
-	@Column(name = "payment_weixin_nick", comment = "付款人微信昵称", length = 3)
+	@Column(name = "payment_weixin_nick", comment = "付款人微信昵称", length = 50)
 	private String paymentWeixinNick;
-	@Column(name = "order_status", comment = "订单状态(正常/退款)", length = 3)
+	@Column(name = "order_status", comment = "订单状态(正常/退款)", length = 20)
 	private String orderStatus;
-	@Column(name = "belongs_sales_commission", comment = "销售佣金所属", length = 3)
+	@Column(name = "belongs_sales_commission", comment = "销售佣金所属", length = 32)
 	private String belongsSalesCommission;
-	@Column(name = "sales_commission_money", comment = "销售佣金金额", length = 3)
+	@Column(name = "sales_commission_money", comment = "销售佣金金额", length = 10)
 	private String salesCommissionMoney;
-	@Column(name = "belongs_members_commission", comment = "会员佣金所属", length = 3)
+	@Column(name = "belongs_members_commission", comment = "会员佣金所属", length = 32)
 	private String belongsMembersCommission;
-	@Column(name = "members_commission_money", comment = "会员佣金金额", length = 3)
+	@Column(name = "members_commission_money", comment = "会员佣金金额", length = 10)
 	private String membersCommissionMoney;
-	@Column(name = "real_pay", comment = "实付金额", length = 3)
+	@Column(name = "real_pay", comment = "实付金额", length = 10)
 	private String realPay;
-	@Column(name = "postage_money", comment = "邮费", length = 3)
+	@Column(name = "postage_money", comment = "邮费", length = 10)
 	private String postageMoney;
-	@Column(name = "order_money", comment = "计算金额 = 实付金额 - 邮费 - 税金", length = 3)
+	@Column(name = "order_money", comment = "计算金额 = 实付金额 - 邮费 - 税金", length = 10)
 	private String orderMoney;
 
 	private String weixin_user_id;

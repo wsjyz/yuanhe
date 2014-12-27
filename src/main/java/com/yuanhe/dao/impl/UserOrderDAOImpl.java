@@ -66,7 +66,7 @@ public class UserOrderDAOImpl extends BaseDAO implements UserOrderDAO {
 				ps.setString(1, orderId);
 				ps.setString(2, userOrder.getPaymentUnionId());
 				ps.setString(3, userOrder.getPaymentWeixinNick());
-				ps.setString(4, Contants.NORMAL);
+				ps.setString(4, userOrder.getOrderStatus());
 				ps.setString(5, userOrder.getBelongsSalesCommission());
 				ps.setString(6, userOrder.getSalesCommissionMoney());
 				ps.setString(7, userOrder.getBelongsMembersCommission());
@@ -121,6 +121,9 @@ public class UserOrderDAOImpl extends BaseDAO implements UserOrderDAO {
 		}
 		if (StringUtils.isNotEmpty(userOrder.getOrderMoney())) {
 			sql.append("order_money='" + userOrder.getOrderMoney() + "',");
+		}
+		if (sql.lastIndexOf(",") + 1 == sql.length()) {
+			sql.delete(sql.lastIndexOf(","), sql.length());
 		}
 		sql.append(" where order_id='" + userOrder.getOrderId() + "'");
 		getJdbcTemplate().update(sql.toString());

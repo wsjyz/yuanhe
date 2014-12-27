@@ -11,9 +11,9 @@ public class PromoteLinks extends BaseDomain {
 	private static final long serialVersionUID = 1L;
 	@Column(name = "link_id", pk = true, comment = "链接ID", length = 32)
 	private String linkId;
-	@Column(name = "link_title", comment = "链接名称", length = 32)
+	@Column(name = "link_title", comment = "链接名称", length = 50)
 	private String linkTitle;
-	@Column(name = "link_url", comment = "链接URL", length = 32)
+	@Column(name = "link_url", comment = "链接URL", length = 100)
 	private String linkUrl;
 
 	public String getLinkId() {
