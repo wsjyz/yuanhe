@@ -1,21 +1,18 @@
 package com.yuanhe.dao.impl;
 
-import com.yuanhe.domain.UserOrder;
-
-import com.yuanhe.utils.Contants;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.jdbc.core.PreparedStatementSetter;
-import org.springframework.stereotype.Service;
-
-import com.yuanhe.dao.BaseDAO;
-import com.yuanhe.dao.UserOrderDAO;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Service;
+
+import com.yuanhe.dao.BaseDAO;
+import com.yuanhe.dao.UserOrderDAO;
+import com.yuanhe.domain.UserOrder;
 
 @Service("UserOrderDAO")
 public class UserOrderDAOImpl extends BaseDAO implements UserOrderDAO {
@@ -49,6 +46,9 @@ public class UserOrderDAOImpl extends BaseDAO implements UserOrderDAO {
 			userOrder.setRealPay(rs.getString("real_pay"));
 			userOrder.setPostageMoney(rs.getString("postage_money"));
 			userOrder.setOrderMoney(rs.getString("order_money"));
+			userOrder.setCommodityName(rs.getString("commodity_name"));
+			userOrder.setCommodityPic(rs.getString("commodity_pic"));
+			userOrder.setUpdateTime(rs.getString("update_time"));
 			return userOrder;
 		}
 	}
@@ -58,8 +58,8 @@ public class UserOrderDAOImpl extends BaseDAO implements UserOrderDAO {
 		final String orderId = userOrder.getOrderId();
 		StringBuilder sql = new StringBuilder(
 				"INSERT INTO t_yuanhe_user_order (order_id, payment_union_id, payment_weixin_nick, order_status, belongs_sales_commission, sales_commission_money,"
-						+ "belongs_members_commission, members_commission_money, real_pay, postage_money, order_money) ");
-		sql.append("VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+						+ "belongs_members_commission, members_commission_money, real_pay, postage_money, order_money,commodity_name,commodity_pic,update_time) ");
+		sql.append("VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		getJdbcTemplate().update(sql.toString(), new PreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps) throws SQLException {
@@ -74,7 +74,9 @@ public class UserOrderDAOImpl extends BaseDAO implements UserOrderDAO {
 				ps.setString(9, userOrder.getRealPay());
 				ps.setString(10, userOrder.getPostageMoney());
 				ps.setString(11, userOrder.getOrderMoney());
-
+				ps.setString(12, userOrder.getCommodityName());
+				ps.setString(13, userOrder.getCommodityPic());
+				ps.setString(14, userOrder.getUpdateTime());
 			}
 		});
 	}
@@ -122,11 +124,40 @@ public class UserOrderDAOImpl extends BaseDAO implements UserOrderDAO {
 		if (StringUtils.isNotEmpty(userOrder.getOrderMoney())) {
 			sql.append("order_money='" + userOrder.getOrderMoney() + "',");
 		}
+		if (StringUtils.isNotEmpty(userOrder.getUpdateTime())) {
+			sql.append("update_time='" + userOrder.getUpdateTime() + "',");
+		}
 		if (sql.lastIndexOf(",") + 1 == sql.length()) {
 			sql.delete(sql.lastIndexOf(","), sql.length());
 		}
 		sql.append(" where order_id='" + userOrder.getOrderId() + "'");
 		getJdbcTemplate().update(sql.toString());
+	}
+
+	@Override
+	public List<UserOrder> findOrderList(int getiDisplayStart, int i,
+			String getsSearch) {
+		StringBuilder sql = new StringBuilder(
+				"select * from t_yuanhe_user_order  where 1=1 ");
+		if (StringUtils.isNotEmpty(getsSearch)) {
+			sql.append(" and  (sales_commission_money='"+getsSearch+"' ");
+			sql.append(" or  members_commission_money='"+getsSearch+"' ");
+			sql.append(" or  update_time like '%"+getsSearch+"%') ");
+		}
+		  sql.append(" order by order_id,update_time desc LIMIT ?,?");
+	   return getJdbcTemplate().query(sql.toString(),new Object[]{getiDisplayStart,i},new UserOrderRowMapper());
+	}
+
+	@Override
+	public int findOrderCount(String getsSearch) {
+		   StringBuilder countSql = new StringBuilder(
+	                "select count(*) from t_yuanhe_user_order where 1=1");
+		   if (StringUtils.isNotEmpty(getsSearch)) {
+			   countSql.append(" and  (sales_commission_money='"+getsSearch+"' ");
+			   countSql.append(" or  members_commission_money='"+getsSearch+"' ");
+			   countSql.append(" or  update_time like '%"+getsSearch+"%') ");
+			}
+		 return getJdbcTemplate().queryForObject(countSql.toString(), Integer.class);
 	}
 
 }

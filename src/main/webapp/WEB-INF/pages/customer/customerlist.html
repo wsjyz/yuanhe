@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>粉丝列表</title>
+    <link rel="stylesheet" href="${request.contextPath}/css/popup.css">
+    <style type="text/css" title="currentStyle">
+        @import "${request.contextPath}/css/demo_page.css";
+        @import "${request.contextPath}/css/demo_table_jui.css";
+        @import "${request.contextPath}/css/jquery-ui-1.8.4.custom.css";
+        .dataTables_info { padding-top: 0;font-size: 0.8em }
+        .dataTables_paginate { padding-top: 0; }
+        .css_right { float: right; }
+        #example_wrapper .fg-toolbar { font-size: 0.8em }
+        #theme_links span { float: left; padding: 2px 10px; }
+        .toolbar {
+            float: left;font-size: 0.8em
+        }
+        #center{
+            position: absolute;
+            width:800px;
+            height:200px;
+            left:20%;
+            top:10%;
+        }
+    </style>
+    <script src="${request.contextPath}/js/jquery-2.0.0.min.js"></script>
+    <script type="text/javascript" language="javascript" src="${request.contextPath}/js/jquery.dataTables.min.js"></script>
+    <script src="${request.contextPath}/js/jquery.bpopup.min.js"></script>
+    <script src="${request.contextPath}/js/jquery.livequery.min.js"></script>
+
+    <script type="text/javascript" charset="utf-8">
+
+        $(document).ready(function() {
+            var oTable = $('#example').dataTable( {
+                "bJQueryUI": true,
+                "sPaginationType": "full_numbers",
+                "bProcessing": true,
+                "sAjaxSource": "${request.contextPath}/Customer/get-customerlist",
+                "bServerSide": true,
+                "aoColumns": [
+                    { "mData": "customerPic" },
+                    { "mData": "customerNick" },
+                    { "mData": "cteateTime" }
+                ],
+                "oLanguage": {
+               	 "sLengthMenu": "每页显示 _MENU_ 条记录",
+               	 "sZeroRecords": "抱歉， 没有找到",
+               	 "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+               	 "sInfoEmpty": "没有数据",
+               	 "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+               	 "oPaginate": {
+               	 "sFirst": "首页",
+               	 "sPrevious": "前一页",
+               	 "sNext": "后一页",
+               	 "sLast": "尾页"
+               	 },
+               	 "sZeroRecords": "没有检索到数据",
+               	 "sProcessing": "<img src='./loading.gif' />"
+               	 }
+            } );
+            $(".b-iframe").livequery(function(){     //一定要有.load等载入完成
+                $(this).load(function(){
+                    var iframeWidth = $(this).contents().find("[id='container']").width();     //获取高度
+                    var iframeHeight = $(this).contents().find("[id='container']").height();
+                    $(this).width(iframeWidth+200);    //iframe高度等于嵌进来html的高度
+                    $(this).height(iframeHeight);
+                });
+            });
+        } );
+    </script>
+</head>
+<body>
+ <div style="margin-top:20px;margin-bottom: 20px;">
+    <table cellpadding="0" cellspacing="0" border="0" class="display"  id="example">
+        <thead>
+        <tr>
+            <th width="15%">粉丝微信头像</th>
+            <th width="25%">粉丝微信昵称</th>
+            <th width="25%">成为该经销商的会员时间</th>
+        </tr>
+        </thead>
+        <tbody>
+
+    </table>
+</div>
+</body>
+</html>

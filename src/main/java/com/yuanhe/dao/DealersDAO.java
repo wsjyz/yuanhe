@@ -11,4 +11,5 @@ public interface DealersDAO {
     int saveDelearBatch(List<Dealers> dealersList);
 
     int findDealerCount();
+    String getYuanHeDealersId();
 }

@@ -51,7 +51,7 @@ public class DealerController {
     @RequestMapping(value = "/get-list")
     public PageModel getGoodsPage(PageModel ptFromPage){
 
-        List<Dealers> dealersList = dealersService.findDealerList(ptFromPage.getiDisplayStart(),ptFromPage.getiDisplayStart()+ptFromPage.getiDisplayLength());
+        List<Dealers> dealersList = dealersService.findDealerList(ptFromPage.getiDisplayStart(),ptFromPage.getiDisplayLength());
         int count = dealersService.findDealerCount();
         PageModel pt = new PageModel();
         pt.setsEcho(ptFromPage.getsEcho());

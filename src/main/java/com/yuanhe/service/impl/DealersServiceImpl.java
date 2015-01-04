@@ -6,6 +6,7 @@ import com.yuanhe.weixin.CorpUserService;
 import com.yuanhe.weixin.bean.CorpUser;
 import com.yuanhe.weixin.bean.CorpUserResponse;
 import com.yuanhe.weixin.proxy.WeixinCorpRemoteProxy;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +45,11 @@ public class DealersServiceImpl implements DealersService {
 
         return dealersDAO.findDealerCount();
     }
+
+	@Override
+	public String getYuanHeDealersId() {
+		return dealersDAO.getYuanHeDealersId();
+	}
 
 
 }

@@ -6,9 +6,12 @@ import java.util.List;
 
 public interface DealersService {
 
-    List<Dealers> findDealerList(long start,long end);
+	List<Dealers> findDealerList(long start, long end);
 
-    int saveDelearBatch();
+	int saveDelearBatch();
 
-    int findDealerCount();
+	int findDealerCount();
+
+	String getYuanHeDealersId();
+
 }
