@@ -2,6 +2,7 @@ package com.yuanhe.dao;
 
 import java.util.List;
 
+import com.yuanhe.domain.PromoteLinks;
 import com.yuanhe.domain.UserAccessRecord;
 
 public interface UserAccessRecordDAO {
@@ -11,4 +12,6 @@ public interface UserAccessRecordDAO {
 	 * 根据用户UnionId获取经销商ID
 	 */
 	String getDealersIdByUnionId(String unionId);
+
+    UserAccessRecord saveAccessRecord(UserAccessRecord userAccessRecord);
 }

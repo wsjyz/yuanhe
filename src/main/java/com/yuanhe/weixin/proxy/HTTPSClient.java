@@ -105,7 +105,11 @@ public class HTTPSClient {
     public StringEntity packageStringParams(){
         StringEntity  postingString = null;
         try {
-            postingString =new StringEntity(JSON.toJSONString(jsonBodyParams));
+            String jsonBodyParamsStr = (String)jsonBodyParams;
+            if(jsonBodyParams instanceof String == false){
+                jsonBodyParamsStr = JSON.toJSONString(jsonBodyParams);
+            }
+            postingString =new StringEntity(jsonBodyParamsStr);
             System.out.println("body|"+JSON.toJSONString(jsonBodyParams));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

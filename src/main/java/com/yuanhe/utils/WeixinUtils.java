@@ -20,6 +20,8 @@ public class WeixinUtils {
 
     public static WeixinAccessTokenBean weixinAccessTokenBean;
 
+    public static WeixinAccessTokenBean weixinWomanAccessTokenBean;
+
     private static final String CORPID = "wxfb5ee1afc560a3be";
 
     private static final String CORPSECRET = "y29rsSXWXEShXkmyBx8mskVSNonvSqvqzQWqMWGbRIXtMkiWxbKRVLRDYqykB2tI";
@@ -31,6 +33,7 @@ public class WeixinUtils {
     public void findAccessToken(){
         obtainCorpAccessToken();
         obtainAccessToken();
+        obtainWomanAccessToken();
     }
 
     public String obtainCorpAccessToken(){
@@ -82,7 +85,31 @@ public class WeixinUtils {
         }
         return weixinAccessTokenBean.getAccessToken();
     }
+    public String obtainWomanAccessToken(){
 
+        weixinWomanAccessTokenBean = new WeixinAccessTokenBean();
+        //获取accesstoken
+        HTTPSClient client = new HTTPSClient();
+        client.setSERVER_HOST_URL("https://api.weixin.qq.com/cgi-bin/");
+        client.setServiceUri("token");
+        Map<String,Object> params = new HashMap<String,Object>();
+        params.put("appid",Contants.WOMAN_APPID);
+        params.put("secret",Contants.WOMAN_SECRET);
+        params.put("grant_type","client_credential");
+        client.setParams(params);
+        String responseStr = client.request();
+        Map<String,String> responseMap = JSON.parseObject(responseStr,new TypeReference<Map<String, String>>(){});
+
+        if(responseMap.get("errcode") == null){
+            String accessToken = responseMap.get("access_token");
+            weixinWomanAccessTokenBean.setAccessToken(accessToken);
+            weixinWomanAccessTokenBean.setExpireTime(new Date().getTime() + 1000 * 7200);
+            logger.info("获取女装AccessToken成功");
+        }else{
+            logger.info("获取女装AccessToken错误:"+responseStr);
+        }
+        return weixinWomanAccessTokenBean.getAccessToken();
+    }
     public String getCorpAccessToken(){
         WeixinAccessTokenBean tokenBean = WeixinUtils.weixinCorpAccessTokenBean;
         long currentTime = new Date().getTime();
@@ -103,7 +130,16 @@ public class WeixinUtils {
             return obtainCorpAccessToken();
         }
     }
+    public String getWomanAccessToken(){
+        WeixinAccessTokenBean tokenBean = WeixinUtils.weixinWomanAccessTokenBean;
+        long currentTime = new Date().getTime();
 
+        if(tokenBean != null && tokenBean.getExpireTime() > currentTime){
+            return tokenBean.getAccessToken();
+        }else{
+            return obtainWomanAccessToken();
+        }
+    }
     private class WeixinAccessTokenBean {
 
         private String accessToken;

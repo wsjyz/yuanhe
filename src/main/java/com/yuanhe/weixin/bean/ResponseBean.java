@@ -5,15 +5,15 @@ package com.yuanhe.weixin.bean;
  */
 public class ResponseBean {
 
-    private int errorcode;
+    private int errcode;
     private String errmsg;
 
-    public int getErrorcode() {
-        return errorcode;
+    public int getErrcode() {
+        return errcode;
     }
 
-    public void setErrorcode(int errorcode) {
-        this.errorcode = errorcode;
+    public void setErrcode(int errcode) {
+        this.errcode = errcode;
     }
 
     public String getErrmsg() {

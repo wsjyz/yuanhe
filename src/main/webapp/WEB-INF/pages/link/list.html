@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="${request.contextPath}/css/jquery.mobile-1.4.2.min.css">
+    <script src="${request.contextPath}/js/jquery-2.0.0.min.js"></script>
+    <script src="${request.contextPath}/js/jquery.mobile-1.4.2.min.js"></script>
+    <script type="application/javascript">
+        $(function(){
+            $.getJSON("${request.contextPath}/promote-link/find-list",
+                    function(data) {
+                        $.each(data, function(i, item) {
+                            $("#linklist").append(
+                                "<li class=\"ui-li-has-thumb ui-first-child\">" +
+                                            "<a href=\"javascript:toShare('"+item.linkUrl+"','"+item.linkId+"')\" " +
+                                        "class=\"ui-btn ui-btn-icon-right ui-icon-carat-r\">" +
+                                        "<img src=\"${request.contextPath}/images/chrome.png\">"+
+                                    "<h2>"+item.linkTitle+"</h2>"+
+                                    "<p>"+item.linkUrl+"</p>"+
+                                    "</a>"+
+                                "</li>"
+
+                            );
+                        });
+                    });
+
+        });
+        function toShare(linkUrl,linkId){
+//            $("#linkUrl").val(linkUrl);
+//            $("#linkId").val(linkId);
+            //document.getElementById("shareForm").submit();
+            window.location.href = "${request.contextPath}/dealer/to-share-link?linkUrl="+linkUrl
+                    +"&linkId="+linkId+"&dealerId=${dealerId}";
+        }
+    </script>
+</head>
+<body>
+<form action="${request.contextPath}/dealer/to-share-link" method="post" id="shareForm">
+    <input type="hidden" id="linkUrl">
+    <input type="hidden" id="dealerId" value="${dealerId}" />
+    <input type="hidden" id="linkId"  value="sss"/>
+</form>
+
+
+<div data-role="page" id="pageone">
+    <div data-role="content">
+        <h2>分享列表</h2>
+        <ul id="linklist" data-role="listview" data-inset="true">
+            <!--<li>-->
+                <!--<a href="#">-->
+                    <!--<img src="chrome.png">-->
+                    <!--<h2>Google Chrome</h2>-->
+                    <!--<p>Google Chrome 是免费的开源 web 浏览器。发布于 2008 年。</p>-->
+                <!--</a>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<a href="#">-->
+                    <!--<img src="firefox.png">-->
+                    <!--<h2>Mozilla Firefox</h2>-->
+                    <!--<p>Firefox 是来自 Mozilla 的 web 浏览器。发布于 2004 年。</p>-->
+                <!--</a>-->
+            <!--</li>-->
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

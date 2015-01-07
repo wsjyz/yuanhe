@@ -75,14 +75,10 @@
 
         } );
         function viewQrcode(dealerId){
-            $('#popup2').bPopup({
-                content:'iframe', //'ajax', 'iframe' or 'image'
-                contentContainer:'.content',
-                iframeAttr:'scrolling="yes"',
-                loadUrl:'${request.contextPath}/dealer/get-qrcode?dealerId='+dealerId, //Uses jQuery.load()
-                onClose:function(){
-                    //window.location.reload();
-                }
+            $.ajax({
+                url: "${request.contextPath}/dealer/get-qrcode?dealerId="+dealerId
+            }).done(function(result) {
+                window.open("https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket="+result);
             });
         }
 
@@ -90,9 +86,9 @@
 </head>
 <body>
 <div id="popup2"
-     style="left: 433px; position: absolute; top: 2060px; z-index: 9999; opacity: 1; display: block; height: auto; width:auto;">
+     style="left: 433px; position: absolute; top: 2060px; z-index: 9999; opacity: 1; display: block; height: 300px; width:300px;">
     <span class="button b-close"><span>X</span></span>
-    <div class="content" style="height: auto; width: auto;"></div>
+    <div class="content" style="height: 300px; width: 300px;"></div>
 </div>
 <div >
     <div style="margin-top:20px;margin-bottom: 20px;">

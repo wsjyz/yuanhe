@@ -31,6 +31,11 @@ public class PromoteLinksServiceImpl implements PromoteLinksService {
     }
 
     @Override
+    public List<PromoteLinks> findPromoteLinkList() {
+        return promoteLinksDAO.findPromoteLinkList();
+    }
+
+    @Override
     public int findPromoteLinkCount() {
         return promoteLinksDAO.findPromoteLinkCount();
     }
@@ -38,5 +43,10 @@ public class PromoteLinksServiceImpl implements PromoteLinksService {
     @Override
     public void deletePromoteLink(String promoteLinkId) {
         promoteLinksDAO.deletePromoteLink(promoteLinkId);
+    }
+
+    @Override
+    public PromoteLinks findPromoteLinkById(String linkId) {
+        return promoteLinksDAO.findPromoteLinkById(linkId);
     }
 }

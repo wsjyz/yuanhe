@@ -3,7 +3,9 @@ package com.yuanhe.controller;
 import com.yuanhe.domain.Dealers;
 import com.yuanhe.domain.PageModel;
 import com.yuanhe.domain.PromoteLinks;
+import com.yuanhe.domain.UserAccessRecord;
 import com.yuanhe.service.PromoteLinksService;
+import com.yuanhe.service.UserAccessRecordService;
 import com.yuanhe.weixin.bean.WeixinUser;
 import com.yuanhe.weixin.util.WeixinOauth;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class PromoteLinkController {
 
     @Autowired
     PromoteLinksService promoteLinksService;
+    @Autowired
+    UserAccessRecordService userAccessRecordService;
 
     @RequestMapping(value = "/to-add")
     public String toAddLink() {
@@ -60,13 +64,36 @@ public class PromoteLinkController {
         return "success";
     }
 
+    /**
+     * https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx805e0d1e1ff4c357&redirect_uri=http%3A%2F%2F115.29.47.23%3A8081%2Fyh%2Fpromote-link%2Foauth&response_type=code&scope=snsapi_userinfo&state=http%3A%2F%2Fwww.baidu.com#wechat_redirect
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/oauth")
     public String oauth(HttpServletRequest request){
         String code = request.getParameter("code");
         String state = request.getParameter("state");
+        String dealerId = request.getParameter("dealerId");
         WeixinOauth weixinOauth = new WeixinOauth();
         WeixinOauth.AccessTokenBean accessTokenBean = weixinOauth.getOauthAccessToken(code);
         WeixinUser weixinUser = weixinOauth.getUserInfo(accessTokenBean.getAccess_token(), accessTokenBean.getOpenid());
+        UserAccessRecord userAccessRecord = new UserAccessRecord();
+        userAccessRecord.setAccessUrl(state);
+
+        userAccessRecord.setVisiterDealersId(dealerId);
+        userAccessRecord.setVisiterUnionId(weixinUser.getUnionid());
+        userAccessRecordService.saveAccessRecord(userAccessRecord);
         return "redirect:"+state;
+    }
+    @RequestMapping(value = "/to-list")
+    public String toList(@RequestParam String dealerId,Model model){
+        model.addAttribute("dealerId",dealerId);
+        return "link/list";
+    }
+    @ResponseBody
+    @RequestMapping(value = "/find-list")
+    public List<PromoteLinks> findList(){
+        List<PromoteLinks> promoteLinkses = promoteLinksService.findPromoteLinkList();
+        return promoteLinkses;
     }
 }

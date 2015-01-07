@@ -51,7 +51,7 @@
 				class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
 				<!--这里是是否启用扩展名支持，默认就是true 例如 /user/{userid}.json -->
 				<property name="favorPathExtension" value="false" />
-				<property name="ignoreAcceptHeader" value="false" />
+				<property name="ignoreAcceptHeader" value="true" />
 				<!--这里是是否启用参数支持，默认就是true 例如 /user/{userid}?format=json -->
 				<property name="favorParameter" value="false" />
 				<property name="defaultContentType" value="text/html" />
@@ -84,30 +84,28 @@
 			<list>
 				<bean id="defaultJsonView"
 					class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />
-                <bean id="xmlView"
-                      class="org.springframework.web.servlet.view.xml.MarshallingView">
-                    <property name="marshaller">
-                        <bean class="org.springframework.oxm.xstream.XStreamMarshaller"/>
-                    </property>
-                    <property name="contentType" value="application/xml;charset=UTF-8"/>
-                </bean>
+                <!--<bean id="xmlView"-->
+                      <!--class="org.springframework.web.servlet.view.xml.MarshallingView">-->
+                    <!--<property name="marshaller">-->
+                        <!--<bean class="org.springframework.oxm.xstream.XStreamMarshaller"/>-->
+                    <!--</property>-->
+                    <!--<property name="contentType" value="application/xml;charset=UTF-8"/>-->
+                <!--</bean>-->
             </list>
 		</property>
 	</bean>
-	<bean id="viewResolverCommon"
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix" value="/WEB-INF/pages/" />
-		<property name="suffix" value=".jsp" />
-		<property name="viewClass">
-			<value>org.springframework.web.servlet.view.InternalResourceView
-			</value>
-		</property>
-		<property name="order" value="1" />
-	</bean>
+    <bean id="viewResolverCommon" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/pages/"/>
+        <property name="suffix" value=".jsp"/>
+        <property name="viewClass">
+            <value>org.springframework.web.servlet.view.InternalResourceView</value>
+        </property>
+        <property name="order" value="2"/>
+    </bean>
 	<!-- 默认的视图解析器 在上边的解析错误时使用 (默认使用html)- -->
 	<bean id="fmViewResolver"
 		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver"
-		p:order="2">
+		p:order="1">
 		<property name="viewClass"
 			value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
 		<property name="viewNames" value="*.html" />

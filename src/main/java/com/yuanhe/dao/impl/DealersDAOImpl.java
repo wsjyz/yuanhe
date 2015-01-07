@@ -30,6 +30,27 @@ public class DealersDAOImpl extends BaseDAO implements DealersDAO {
     }
 
     @Override
+    public Dealers findDealerByMobileAndName(String mobile,String name) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM ");
+        sql.append(TABLE_NAME);
+        sql.append(" where dealers_mobile = ? and dealers_name = ?");
+        List<Dealers> dealersList = getJdbcTemplate().query(sql.toString(),new Object[]{mobile,name},new DealerRowMapper());
+        if(dealersList != null && dealersList.size() > 0){
+            return dealersList.get(0);
+        }else{
+            return null;
+        }
+    }
+
+    @Override
+    public void updateDealerUnionId(Dealers dealers) {
+        StringBuilder sql = new StringBuilder("UPDATE ");
+        sql.append(TABLE_NAME);
+        sql.append(" SET union_id = ? where dealers_id = ?");
+        getJdbcTemplate().update(sql.toString(),new Object[]{dealers.getUnionId(),dealers.getDealersId()});
+    }
+
+    @Override
     public int saveDelearBatch(final List<Dealers> dealersList) {
         //删除原来的
         StringBuilder delSql = new StringBuilder("delete from ");

@@ -25,8 +25,18 @@ public class Dealers extends BaseDomain {
 	private String dealersQrUrl;
     @Column(name = "parent_id", comment = "父级id", length = 32)
     private String parentId;
+    @Column(name = "union_id", comment = "unionid", length = 50)
+    private String unionId;
 
-	public String getDealersId() {
+    public String getUnionId() {
+        return unionId;
+    }
+
+    public void setUnionId(String unionId) {
+        this.unionId = unionId;
+    }
+
+    public String getDealersId() {
 		return dealersId;
 	}
 

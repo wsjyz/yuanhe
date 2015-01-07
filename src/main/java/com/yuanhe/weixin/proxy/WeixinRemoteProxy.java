@@ -33,8 +33,8 @@ public class WeixinRemoteProxy<M> extends ProxyFactory<M> {
         String serviceUri = Classes.parseClassMethodToUri(super.getTargetClassName(), super.getMethodName());
         client.setSERVER_HOST_URL("https://api.weixin.qq.com/cgi-bin/");
         client.setServiceUri(serviceUri);
-        System.out.println(client.getContentType());
         String responseStr = client.request();
+        System.out.println(responseStr);
         return Classes.stringToObject(responseStr,returnType);
     }
 

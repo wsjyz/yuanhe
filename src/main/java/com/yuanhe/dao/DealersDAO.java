@@ -10,5 +10,9 @@ public interface DealersDAO {
 
     int saveDelearBatch(List<Dealers> dealersList);
 
+    Dealers findDealerByMobileAndName(String mobile,String name);
+
+    void updateDealerUnionId(Dealers dealers);
+
     int findDealerCount();
 }

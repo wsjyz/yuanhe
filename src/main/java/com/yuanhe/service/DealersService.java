@@ -10,5 +10,9 @@ public interface DealersService {
 
     int saveDelearBatch();
 
+    Dealers findDealerByMobileAndName(String mobile,String name);
+
+    void updateDealerUnionId(Dealers dealers);
+
     int findDealerCount();
 }

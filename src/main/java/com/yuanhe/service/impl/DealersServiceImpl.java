@@ -2,7 +2,7 @@ package com.yuanhe.service.impl;
 
 import com.yuanhe.dao.DealersDAO;
 import com.yuanhe.domain.Dealers;
-import com.yuanhe.weixin.CorpUserService;
+import com.yuanhe.weixin.corp.UserService;
 import com.yuanhe.weixin.bean.CorpUser;
 import com.yuanhe.weixin.bean.CorpUserResponse;
 import com.yuanhe.weixin.proxy.WeixinCorpRemoteProxy;
@@ -28,8 +28,8 @@ public class DealersServiceImpl implements DealersService {
     @Override
     public int saveDelearBatch() {
         List<Dealers> dealersList = new ArrayList<Dealers>();
-        CorpUserService corpUserService = new WeixinCorpRemoteProxy<CorpUserService>(CorpUserService.class).getProxy();
-        CorpUserResponse corpUserResponse = corpUserService.simplelist(1,1,0);
+        UserService userService = new WeixinCorpRemoteProxy<UserService>(UserService.class).getProxy();
+        CorpUserResponse corpUserResponse = userService.simplelist(1,1,0);
         for(CorpUser corpUser:corpUserResponse.getUserlist()){
             Dealers dealers = new Dealers();
             dealers.setDealersId(corpUser.getUserid()+"");
@@ -37,6 +37,16 @@ public class DealersServiceImpl implements DealersService {
             dealersList.add(dealers);
         }
         return dealersDAO.saveDelearBatch(dealersList);
+    }
+
+    @Override
+    public Dealers findDealerByMobileAndName(String mobile, String name) {
+        return dealersDAO.findDealerByMobileAndName(mobile,name);
+    }
+
+    @Override
+    public void updateDealerUnionId(Dealers dealers) {
+        dealersDAO.updateDealerUnionId(dealers);
     }
 
     @Override

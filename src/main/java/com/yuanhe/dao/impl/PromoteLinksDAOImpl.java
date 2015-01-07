@@ -44,6 +44,28 @@ public class PromoteLinksDAOImpl extends BaseDAO implements PromoteLinksDAO {
     }
 
     @Override
+    public PromoteLinks findPromoteLinkById(String linkId) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM ");
+        sql.append(TABLE_NAME);
+        sql.append(" where link_id = ?");
+        List<PromoteLinks> promoteLinksList = getJdbcTemplate().query(sql.toString(),new Object[]{linkId},
+                new PromoteLinkRowMapper());
+        if(promoteLinksList != null && promoteLinksList.size() >0 ){
+            return promoteLinksList.get(0);
+        }else{
+            return null;
+        }
+    }
+
+    @Override
+    public List<PromoteLinks> findPromoteLinkList() {
+        StringBuilder sql = new StringBuilder("SELECT * FROM ");
+        sql.append(TABLE_NAME);
+        List<PromoteLinks> promoteLinksList = getJdbcTemplate().query(sql.toString(),new PromoteLinkRowMapper());
+        return promoteLinksList;
+    }
+
+    @Override
     public int findPromoteLinkCount() {
         StringBuilder countSql = new StringBuilder(
                 "select count(*) from "+TABLE_NAME);

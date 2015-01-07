@@ -10,7 +10,11 @@ public interface PromoteLinksService {
 
     List<PromoteLinks> findPromoteLinkList(long start, long end);
 
+    List<PromoteLinks> findPromoteLinkList();
+
     int findPromoteLinkCount();
 
     void deletePromoteLink(String promoteLinkId);
+
+    PromoteLinks findPromoteLinkById(String linkId);
 }
