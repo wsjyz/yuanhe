@@ -23,6 +23,16 @@ public class Customer extends BaseDomain {
 	private String openId;
 	@Column(name = "ouath_open_id", comment = "OuathOpenID", length = 32)
 	private String ouathOpenId;
+	@Column(name = "create_time", comment = "OuathOpenID", length = 32)
+	private String cteateTime;
+
+	public void setCteateTime(String cteateTime) {
+		this.cteateTime = cteateTime;
+	}
+
+	public String getCteateTime() {
+		return cteateTime;
+	}
 
 	public String getCustomerUnionId() {
 		return customerUnionId;

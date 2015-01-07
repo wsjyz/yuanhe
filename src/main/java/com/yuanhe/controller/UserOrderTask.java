@@ -1,5 +1,7 @@
 package com.yuanhe.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +15,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.yuanhe.domain.Customer;
 import com.yuanhe.domain.UserOrder;
 import com.yuanhe.service.CustomerService;
+import com.yuanhe.service.DealersService;
 import com.yuanhe.service.UserAccessRecordService;
 import com.yuanhe.service.UserOrderService;
 import com.yuanhe.utils.KDTApiUtils;
@@ -22,22 +25,28 @@ import com.yuanhe.utils.Contants;
 
 @Component
 public class UserOrderTask {
-    protected static Logger logger = Logger.getLogger(UserOrderTask.class);
+	protected static Logger logger = Logger.getLogger(UserOrderTask.class);
 	@Autowired
 	UserOrderService userOrderService;
 	@Autowired
 	CustomerService customerService;
 	@Autowired
+	DealersService dealersService;
+	@Autowired
 	UserAccessRecordService userAccessRecordService;
 
-	@Scheduled(cron = "0/50 * *  * * ? ")
+	@Scheduled(cron = "0 0/5 *  * * ? ")
 	public void getNewUserOrder() {
 		logger.info("进入订单获取");
-		KDTApiUtils apiUtils = new KDTApiUtils();
-		List<UserOrder> sendOrderList = apiUtils.sendOrderList();
-		List<UserOrder> orderList = userOrderService.getUserOrderList();
-		for (UserOrder userOrder : sendOrderList) {
-			NewOrder(userOrder, orderList);
+		try {
+			KDTApiUtils apiUtils = new KDTApiUtils();
+			List<UserOrder> sendOrderList = apiUtils.sendOrderList();
+			List<UserOrder> orderList = userOrderService.getUserOrderList();
+			for (UserOrder userOrder : sendOrderList) {
+				NewOrder(userOrder, orderList);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		logger.info("订单获取完毕 ");
 	}
@@ -47,22 +56,22 @@ public class UserOrderTask {
 				&& !CollectionUtils.isEmpty(userOrderOldList)) {
 			// 如果订单被退回则修改订单信息
 			for (UserOrder userOrder2 : userOrderOldList) {
-				if (userOrder.getOrderId().equals(userOrder2.getOrderId())) {
+				if (userOrder.getOrderId().equals(userOrder2.getOrderId()) && !userOrder.getOrderStatus().equals(Contants.REFUND)) {
 					userOrder2.setSalesCommissionMoney("0");
 					userOrder2.setMembersCommissionMoney("0");
 					userOrder2.setRealPay("0");
 					userOrder2.setPostageMoney("0");
 					userOrder2.setOrderMoney("0");
 					userOrderService.updateOrder(userOrder2);
+					logger.info("有新订单更新 ");
 				}
 			}
-			logger.info("有新订单更新 ");
 		} else {
-			boolean isCheck=false;
+			boolean isCheck = false;
 			if (!CollectionUtils.isEmpty(userOrderOldList)) {
 				for (UserOrder userOrder2 : userOrderOldList) {
 					if (userOrder.getOrderId().equals(userOrder2.getOrderId())) {
-						isCheck=true;
+						isCheck = true;
 						break;
 					}
 				}
@@ -104,7 +113,7 @@ public class UserOrderTask {
 			visiterDealersId = userAccessRecordService
 					.getDealersIdByUnionId(userUnionId);
 			if (StringUtils.isEmpty(visiterDealersId)) {
-				visiterDealersId = "yuanhe";
+				visiterDealersId = dealersService.getYuanHeDealersId();
 			}
 			customer = new Customer();
 			customer.setCustomerUnionId(userUnionId);
@@ -115,6 +124,9 @@ public class UserOrderTask {
 			customer.setOpenId(jsonObj.getString("openid"));
 			// 待确定
 			customer.setOuathOpenId(userOrder.getWeixin_openid());
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			customer.setCteateTime(sdf.format(cal.getTime()));
 			customerService.saveCustomer(customer);
 			xiaoshouId = visiterDealersId;
 			huiyuanID = visiterDealersId;
@@ -129,7 +141,8 @@ public class UserOrderTask {
 			visiterDealersId = userAccessRecordService
 					.getDealersIdByUnionId(userUnionId);
 			if (StringUtils.isEmpty(visiterDealersId)) {
-				visiterDealersId = "yuanhe";
+				//如果没有访问的经销商ID，就用原来的元和的ID
+				visiterDealersId =  dealersService.getYuanHeDealersId();
 			}
 			xiaoshouId = customer.getCustomerDealers();
 			huiyuanID = visiterDealersId;

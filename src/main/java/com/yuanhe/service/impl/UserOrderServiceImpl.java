@@ -30,4 +30,15 @@ public class UserOrderServiceImpl implements UserOrderService {
 		userOrderDAO.updateOrder(userOrder);
 	}
 
+	@Override
+	public List<UserOrder> findOrderList(int getiDisplayStart, int i,
+			String getsSearch) {
+		return userOrderDAO.findOrderList(getiDisplayStart,i,getsSearch);
+	}
+
+	@Override
+	public int findOrderCount(String getsSearch) {
+		return userOrderDAO.findOrderCount(getsSearch);
+	}
+
 }

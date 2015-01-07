@@ -31,9 +31,39 @@ public class UserOrder extends BaseDomain {
 	private String postageMoney;
 	@Column(name = "order_money", comment = "计算金额 = 实付金额 - 邮费 - 税金", length = 10)
 	private String orderMoney;
+	@Column(name = "commodity_name", comment = "商品名称", length = 50)
+	private String commodityName;
+	@Column(name = "commodity_pic", comment = "商品图片", length = 200)
+	private String commodityPic;
+	@Column(name = "update_time", comment = "交易更新时间", length = 50)
+	private String updateTime;
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
 
 	private String weixin_user_id;
 	private String weixin_openid;
+
+	public String getCommodityName() {
+		return commodityName;
+	}
+
+	public void setCommodityName(String commodityName) {
+		this.commodityName = commodityName;
+	}
+
+	public String getCommodityPic() {
+		return commodityPic;
+	}
+
+	public void setCommodityPic(String commodityPic) {
+		this.commodityPic = commodityPic;
+	}
 
 	public void setWeixin_openid(String weixin_openid) {
 		this.weixin_openid = weixin_openid;

@@ -15,4 +15,5 @@ public interface DealersDAO {
     void updateDealerUnionId(Dealers dealers);
 
     int findDealerCount();
+    String getYuanHeDealersId();
 }

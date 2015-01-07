@@ -21,7 +21,8 @@ public class CustomerDAOImpl extends BaseDAO implements CustomerDAO {
 	@Override
 	public Customer getCustomerById(String userUnionId) {
 		StringBuilder sql = new StringBuilder(
-				"select * from t_yuanhe_customer where customer_union_id ='"+userUnionId+"'");
+				"select * from t_yuanhe_customer where customer_union_id ='"
+						+ userUnionId + "'");
 		List<Customer> customerList = getJdbcTemplate().query(sql.toString(),
 				new String[] {}, new CustomerRowMapper());
 		if (CollectionUtils.isEmpty(customerList)) {
@@ -42,6 +43,7 @@ public class CustomerDAOImpl extends BaseDAO implements CustomerDAO {
 			customer.setCustomerDealers(rs.getString("customer_dealers"));
 			customer.setOpenId(rs.getString("open_id"));
 			customer.setOuathOpenId(rs.getString("ouath_open_id"));
+			customer.setCteateTime(rs.getString("create_time"));
 			return customer;
 		}
 	}
@@ -49,8 +51,8 @@ public class CustomerDAOImpl extends BaseDAO implements CustomerDAO {
 	@Override
 	public void saveCustomer(final Customer customer) {
 		StringBuilder sql = new StringBuilder(
-				"INSERT INTO t_yuanhe_customer (customer_union_id, customer_nick, customer_pic, customer_provice, customer_dealers, open_id,ouath_open_id) ");
-		sql.append("VALUES (?,?,?,?,?,?,?)");
+				"INSERT INTO t_yuanhe_customer (customer_union_id, customer_nick, customer_pic, customer_provice, customer_dealers, open_id,ouath_open_id,create_time) ");
+		sql.append("VALUES (?,?,?,?,?,?,?,?)");
 		getJdbcTemplate().update(sql.toString(), new PreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps) throws SQLException {
@@ -61,6 +63,8 @@ public class CustomerDAOImpl extends BaseDAO implements CustomerDAO {
 				ps.setString(5, customer.getCustomerDealers());
 				ps.setString(6, customer.getOpenId());
 				ps.setString(7, customer.getOuathOpenId());
+				ps.setString(8, customer.getCteateTime());
+
 			}
 		});
 	}
@@ -97,6 +101,33 @@ public class CustomerDAOImpl extends BaseDAO implements CustomerDAO {
 				+ "'");
 		getJdbcTemplate().update(sql.toString());
 
+	}
+
+	@Override
+	public int findCustomerCount(String dealersName) {
+		StringBuilder countSql = new StringBuilder(
+				"select count(*) from t_yuanhe_customer  cu left join t_yuanhe_dealers dealer "
+						+ "on cu.customer_dealers=dealer.dealers_id where 1=1 ");
+		if (StringUtils.isNotEmpty(dealersName)) {
+			countSql.append(" and dealer.dealers_name ='" + dealersName + "'");
+		}
+		return getJdbcTemplate().queryForObject(countSql.toString(),
+				Integer.class);
+	}
+
+	@Override
+	public List<Customer> findCustomerList(int getiDisplayStart, int end,
+			String dealersName) {
+		StringBuilder sql = new StringBuilder(
+				"select cu.* from t_yuanhe_customer  cu left join t_yuanhe_dealers dealer "
+						+ "on cu.customer_dealers=dealer.dealers_id where 1=1 ");
+		if (StringUtils.isNotEmpty(dealersName)) {
+			sql.append(" and dealer.dealers_name ='" + dealersName + "'");
+		}
+		sql.append(" LIMIT ?,?");
+		return getJdbcTemplate()
+				.query(sql.toString(), new Object[] { getiDisplayStart, end },
+						new CustomerRowMapper());
 	}
 
 }

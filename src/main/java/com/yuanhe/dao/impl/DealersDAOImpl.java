@@ -1,16 +1,23 @@
 package com.yuanhe.dao.impl;
 
+import com.yuanhe.domain.Customer;
 import com.yuanhe.domain.Dealers;
+
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.yuanhe.dao.BaseDAO;
 import com.yuanhe.dao.DealersDAO;
 
 
+
+import com.yuanhe.dao.impl.CustomerDAOImpl.CustomerRowMapper;
+
 import javax.swing.tree.TreePath;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -105,4 +112,16 @@ public class DealersDAOImpl extends BaseDAO implements DealersDAO {
             return dealers;
         }
     }
+
+	@Override
+	public String getYuanHeDealersId() {
+		StringBuilder sql = new StringBuilder(
+				"select * from t_yuanhe_dealers where dealers_name ='YUANHE'");
+		List<Dealers> dealersList = getJdbcTemplate().query(sql.toString(),
+				new String[] {}, new DealerRowMapper());
+		if (CollectionUtils.isEmpty(dealersList)) {
+			return null;
+		}
+		return dealersList.get(0).getDealersId();
+	}
 }

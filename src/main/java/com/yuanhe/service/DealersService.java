@@ -10,9 +10,12 @@ public interface DealersService {
 
     int saveDelearBatch();
 
+	int findDealerCount();
+
+	String getYuanHeDealersId();
+
     Dealers findDealerByMobileAndName(String mobile,String name);
 
     void updateDealerUnionId(Dealers dealers);
 
-    int findDealerCount();
 }

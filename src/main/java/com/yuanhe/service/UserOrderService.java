@@ -9,4 +9,6 @@ public interface UserOrderService {
 	List<UserOrder> getUserOrderList();
 	void saveOrder(UserOrder userOrder);
 	void updateOrder(UserOrder userOrder);
+	List<UserOrder> findOrderList(int getiDisplayStart, int i, String getsSearch);
+	int findOrderCount(String getsSearch);
 }

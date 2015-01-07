@@ -6,6 +6,12 @@ import com.yuanhe.domain.Customer;
 
 public interface CustomerService {
 	Customer getCustomerById(String userUnionId);
+
 	void saveCustomer(Customer customer);
+
 	void updateCustomer(Customer customer);
+
+	List<Customer> findCustomerList(int getiDisplayStart, int end, String dealersName);
+
+	int findCustomerCount(String dealersName);
 }
