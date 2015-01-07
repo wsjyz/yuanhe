@@ -117,7 +117,7 @@ public class DealerController {
     }
 
     @ResponseBody
-    @RequestMapping(value="/sanctus",method = RequestMethod.POST)
+    @RequestMapping(value="/sanctus",method = RequestMethod.POST,produces = "text/plain;charset=utf-8")
     public String qrcodeEvent(HttpServletRequest request){
         CustomerBean customerBean = processRequest(request);
         if(StringUtils.isNotBlank(customerBean.getDealerId())){
@@ -139,8 +139,9 @@ public class DealerController {
                 customer.setCustomerDealers(customerBean.getDealerId());
                 customerService.updateCustomer(customer);
             }
+
         }
-        return "success";
+        return customerBean.getResponseMessage();
     }
     @ResponseBody
     @RequestMapping(value = "/sanctus",method = RequestMethod.GET)
@@ -199,7 +200,16 @@ public class DealerController {
                  String eventKey = requestMap.get("EventKey");
                  customerBean.setDealerId(eventKey);
                  customerBean.setOpenId(fromUserName);
-            }
+                 //返回消息
+                 TextMessage textMessage = new TextMessage();
+                 textMessage.setToUserName(fromUserName);
+                 textMessage.setFromUserName(toUserName);
+                 textMessage.setCreateTime(new Date().getTime());
+                 textMessage.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_TEXT);
+                 textMessage.setFuncFlag(0);
+                 textMessage.setContent("欢迎！！");
+                 customerBean.setResponseMessage(MessageUtil.textMessageToXml(textMessage));
+             }
 
 
         } catch (Exception e) {
@@ -261,6 +271,15 @@ public class DealerController {
 
         private String openId;
         private String dealerId;
+        private String responseMessage;
+
+        public String getResponseMessage() {
+            return responseMessage;
+        }
+
+        public void setResponseMessage(String responseMessage) {
+            this.responseMessage = responseMessage;
+        }
 
         public String getOpenId() {
             return openId;
