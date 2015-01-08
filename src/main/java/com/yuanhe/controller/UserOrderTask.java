@@ -81,7 +81,7 @@ public class UserOrderTask {
 				Customer customer = new Customer();
 				setUserOrderByCustomer(userOrder, werxinGetUser, customer);
 				String params = "{\"touser\": \""
-						+ customer.getCustomerDealers()
+						+ userOrder.getBelongsMembersCommission()+"|"+userOrder.getBelongsSalesCommission()
 						+ "\",\"toparty\": \""
 						+ customer.getCustomerDealers()
 						+ "\",\"totag\": \""
