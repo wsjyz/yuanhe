@@ -1,5 +1,9 @@
 package com.yuanhe.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+import com.yuanhe.weixin.bean.CorpUserResponse;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -129,6 +133,8 @@ public class StringUtil {
         System.out.println(StringUtil.GetMD5Code(chat_sign).toUpperCase());
         System.out.println(StringUtil.GetMD5Code(record_sign).toUpperCase());
         System.out.println(StringUtil.GetMD5Code(msg_sign).toUpperCase());
+
+        JSON.parseObject("{\"errcode\":0,\"errmsg\":\"ok\",\"userlist\":[{\"userid\":\"1\",\"name\":\"张三\",\"department\":[3,4],\"position\":\"产品经理\",\"mobile\":\"15913112120\",\"gender\":\"0\",\"email\":\"zhangsan@gzmailteam.com\",\"weixinid\":\"zhangsan\",\"status\":4},{\"userid\":\"2\",\"name\":\"李四1\",\"department\":[5],\"position\":\"工程师\",\"mobile\":\"18913112121\",\"gender\":\"0\",\"email\":\"lisi1@gzmailteam.com\",\"weixinid\":\"lisi14\",\"status\":4},{\"userid\":\"3\",\"name\":\"李四2\",\"department\":[5],\"position\":\"工程师\",\"mobile\":\"18913112122\",\"gender\":\"0\",\"email\":\"lisi2@gzmailteam.com\",\"weixinid\":\"lisi15\",\"status\":4},{\"userid\":\"4\",\"name\":\"李四3\",\"department\":[5],\"position\":\"工程师\",\"mobile\":\"18913112123\",\"gender\":\"0\",\"email\":\"lisi3@gzmailteam.com\",\"weixinid\":\"lisi16\",\"status\":4}]}",new TypeReference<CorpUserResponse>(){});
     }
 
 }

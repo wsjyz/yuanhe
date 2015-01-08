@@ -30,11 +30,13 @@ public class DealersServiceImpl implements DealersService {
     public int saveDelearBatch() {
         List<Dealers> dealersList = new ArrayList<Dealers>();
         UserService userService = new WeixinCorpRemoteProxy<UserService>(UserService.class).getProxy();
-        CorpUserResponse corpUserResponse = userService.simplelist(1,1,0);
+        CorpUserResponse corpUserResponse = userService.list(1,1,0);
         for(CorpUser corpUser:corpUserResponse.getUserlist()){
             Dealers dealers = new Dealers();
             dealers.setDealersId(corpUser.getUserid()+"");
             dealers.setDealersName(corpUser.getName());
+            dealers.setDealersMobile(corpUser.getMobile());
+            dealers.setDealersStatus(corpUser.getStatus()+"");
             dealersList.add(dealers);
         }
         return dealersDAO.saveDelearBatch(dealersList);

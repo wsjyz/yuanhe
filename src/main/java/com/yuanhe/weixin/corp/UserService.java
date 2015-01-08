@@ -11,6 +11,9 @@ public interface UserService {
     @RemoteMethod(methodVarNames={ "department_id","fetch_child","status" })
     CorpUserResponse simplelist(int department_id,int fetch_child,int status);
 
+    @RemoteMethod(methodVarNames={ "department_id","fetch_child","status" })
+    CorpUserResponse list(int department_id,int fetch_child,int status);
+
     @RemoteMethod(methodVarNames={ "code","agentid" })
     UserInfoResponse getuserinfo(String code,String agentId);
 }

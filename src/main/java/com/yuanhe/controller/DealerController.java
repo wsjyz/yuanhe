@@ -246,7 +246,7 @@ public class DealerController {
 
             String oauthUri = null;
             try {
-                oauthUri = URLEncoder.encode("http://115.29.47.23:8081/yh/promote-link/oauth?dealerId="+dealerId, "UTF-8");
+                oauthUri = URLEncoder.encode("http://121.41.26.253/yh/promote-link/oauth?dealerId="+dealerId, "UTF-8");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
