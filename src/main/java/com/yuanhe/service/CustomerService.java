@@ -14,4 +14,6 @@ public interface CustomerService {
 	List<Customer> findCustomerList(int getiDisplayStart, int end, String dealersName);
 
 	int findCustomerCount(String dealersName);
+	List<Customer> findCustomerListByDealerId(String dealerId);
+
 }

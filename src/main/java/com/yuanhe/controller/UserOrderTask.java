@@ -2,6 +2,7 @@ package com.yuanhe.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +14,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.yuanhe.domain.Customer;
+import com.yuanhe.domain.Dealers;
 import com.yuanhe.domain.UserOrder;
 import com.yuanhe.service.CustomerService;
 import com.yuanhe.service.DealersService;
@@ -63,6 +65,7 @@ public class UserOrderTask {
 					userOrder2.setPostageMoney("0");
 					userOrder2.setOrderMoney("0");
 					userOrderService.updateOrder(userOrder2);
+					refundOrderSend(userOrder, userOrder2);
 					logger.info("有新订单更新 ");
 				}
 			}
@@ -80,17 +83,76 @@ public class UserOrderTask {
 				WerxinGetUser werxinGetUser = new WerxinGetUser();
 				Customer customer = new Customer();
 				setUserOrderByCustomer(userOrder, werxinGetUser, customer);
-				String params = "{\"touser\": \""
-						+ userOrder.getBelongsMembersCommission()+"|"+userOrder.getBelongsSalesCommission()
-						+ "\",\"toparty\": \""
-						+ customer.getCustomerDealers()
-						+ "\",\"totag\": \""
-						+ 3
-						+ "\",\"msgtype\": \"text\",\"agentid\": \"1\",\"text\": {\"content\": \"Holiday Request For Pony(http://xxxxx)\"},\"safe\":\"0\"}";
-				werxinGetUser.sendPostByEmail(params,
-						werxinGetUser.getTokenByShop());
+				addOrderSend(userOrder, werxinGetUser, customer);
 				logger.info("有新订单添加");
 			}
+		}
+	}
+
+	private void refundOrderSend(UserOrder userOrder, UserOrder userOrder2) {
+		WerxinGetUser werxinGetUser = new WerxinGetUser();
+		Customer customer=customerService.getCustomerById(userOrder2.getPaymentUnionId());
+		Dealers dealers = dealersService.getDealersByID(userOrder.getBelongsMembersCommission());
+		if (dealers!=null && StringUtils.isNotEmpty(dealers.getDealersId()) && !"0".equals(dealers.getDealersId())) {
+			String params = "{\"touser\": \""
+					+ userOrder.getBelongsMembersCommission()
+					+ "\",\"toparty\": \""
+					+ customer.getCustomerDealers()
+					+ "\",\"totag\": \""
+					+ 3
+					+ "\",\"msgtype\": \"text\",\"agentid\": \"1\",\"text\": {\"content\": \"尊敬的"+dealers.getDealersName()+",客户"
+					+customer.getCustomerNick()+"购买的"+userOrder.getCommodityName()
+					+",做了退款处理，原来获得的销售佣金变为0!\"},\"safe\":\"0\"}";
+			werxinGetUser.sendPostByEmail(params,werxinGetUser.getTokenByShop());
+
+		}
+		Dealers dealers1 = dealersService.getDealersByID(userOrder.getBelongsSalesCommission());
+		if (dealers1!=null && StringUtils.isNotEmpty(dealers1.getDealersId()) && !"0".equals(dealers1.getDealersId())) {
+			String params1 = "{\"touser\": \""
+					+ userOrder.getBelongsMembersCommission()+"|"+userOrder.getBelongsSalesCommission()
+					+ "\",\"toparty\": \""
+					+ customer.getCustomerDealers()
+					+ "\",\"totag\": \""
+					+ 3
+					+ "\",\"msgtype\": \"text\",\"agentid\": \"1\",\"text\":  {\"content\": \"尊敬的"+dealers1.getDealersName()+",客户"
+					+customer.getCustomerNick()+"购买的"+userOrder.getCommodityName()
+					+",做了退款处理，原来获得的会员佣金变为0!\"},\"safe\":\"0\"}";
+			werxinGetUser.sendPostByEmail(params1,
+					werxinGetUser.getTokenByShop());
+		
+		}
+	}
+
+	private void addOrderSend(UserOrder userOrder, WerxinGetUser werxinGetUser,
+			Customer customer) {
+		Dealers dealers = dealersService.getDealersByID(userOrder.getBelongsMembersCommission());
+		Calendar cal=Calendar.getInstance();
+		if (dealers!=null && StringUtils.isNotEmpty(dealers.getDealersId()) && !"0".equals(dealers.getDealersId())) {
+		String params = "{\"touser\": \""
+				+ userOrder.getBelongsMembersCommission()
+				+ "\",\"toparty\": \""
+				+ customer.getCustomerDealers()
+				+ "\",\"totag\": \""
+				+ 3
+				+ "\",\"msgtype\": \"text\",\"agentid\": \"1\",\"text\": {\"content\": \"尊敬的"+dealers.getDealersName()+",恭喜您获得一笔新佣金，客户"
+				+customer.getCustomerNick()+"购买的"+userOrder.getCommodityName()
+				+"已经于"+cal.get(Calendar.YEAR)+"年"+(cal.get(Calendar.MONTH)+1)+"月"+cal.get(Calendar.DAY_OF_MONTH)+"日签收，您获得佣金："+userOrder.getMembersCommissionMoney()+"元，佣金类型：会员佣金\"},\"safe\":\"0\"}";
+		werxinGetUser.sendPostByEmail(params,
+				werxinGetUser.getTokenByShop());
+		}
+		Dealers dealers1 = dealersService.getDealersByID(userOrder.getBelongsSalesCommission());
+		if (dealers1!=null && StringUtils.isNotEmpty(dealers1.getDealersId()) && !"0".equals(dealers1.getDealersId())) {
+			String params1 = "{\"touser\": \""
+					+ userOrder.getBelongsMembersCommission()+"|"+userOrder.getBelongsSalesCommission()
+					+ "\",\"toparty\": \""
+					+ customer.getCustomerDealers()
+					+ "\",\"totag\": \""
+					+ 3
+					+ "\",\"msgtype\": \"text\",\"agentid\": \"1\",\"text\":  {\"content\": \"尊敬的"+dealers1.getDealersName()+",恭喜您获得一笔新佣金，客户"
+					+customer.getCustomerNick()+"购买的"+userOrder.getCommodityName()
+					+"已经于"+cal.get(Calendar.YEAR)+"年"+(cal.get(Calendar.MONTH)+1)+"月"+cal.get(Calendar.DAY_OF_MONTH)+"日签收，您获得佣金："+userOrder.getSalesCommissionMoney()+"元，佣金类型：销售佣金\"},\"safe\":\"0\"}";
+			werxinGetUser.sendPostByEmail(params1,
+					werxinGetUser.getTokenByShop());
 		}
 	}
 

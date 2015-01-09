@@ -32,13 +32,17 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public List<Customer> findCustomerList(int getiDisplayStart, int end,
 			String dealersName) {
-		// TODO Auto-generated method stub
 		return customerDao.findCustomerList(getiDisplayStart,end,dealersName);
 	}
 
 	@Override
 	public int findCustomerCount(String dealersName) {
 		return customerDao.findCustomerCount(dealersName);
+	}
+
+	@Override
+	public List<Customer> findCustomerListByDealerId(String dealerId) {
+		return customerDao.findCustomerListByDealerId(dealerId);
 	}
 
 }

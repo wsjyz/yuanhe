@@ -11,4 +11,5 @@ public interface CustomerDAO {
 	int findCustomerCount(String dealersName);
 	List<Customer> findCustomerList(int getiDisplayStart, int end,
 			String dealersName);
+	List<Customer> findCustomerListByDealerId(String dealerId);
 }

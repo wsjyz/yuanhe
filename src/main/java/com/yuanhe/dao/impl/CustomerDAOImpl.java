@@ -130,4 +130,14 @@ public class CustomerDAOImpl extends BaseDAO implements CustomerDAO {
 						new CustomerRowMapper());
 	}
 
+	@Override
+	public List<Customer> findCustomerListByDealerId(String dealerId) {
+		StringBuilder sql = new StringBuilder(
+				"select cu.* from t_yuanhe_customer  cu  where 1=1 ");
+		if (StringUtils.isNotEmpty(dealerId)) {
+			sql.append(" and cu.customer_dealers ='" + dealerId + "'");
+		}
+		return getJdbcTemplate().query(sql.toString(), new Object[] {},new CustomerRowMapper());
+	}
+
 }

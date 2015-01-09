@@ -16,4 +16,6 @@ public interface DealersDAO {
 
     int findDealerCount();
     String getYuanHeDealersId();
+
+	Dealers getDealersById(String dealersId);
 }

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="${request.contextPath}/css/jquery.mobile-1.4.2.min.css">
+    <script src="${request.contextPath}/js/jquery-2.0.0.min.js"></script>
+    <script src="${request.contextPath}/js/jquery.mobile-1.4.2.min.js"></script>
+    <script type="application/javascript">
+        $(function(){
+            $.getJSON("${request.contextPath}/Customer/find-customerlist?dealerId=${dealerId}",
+                    function(data) {
+                        $.each(data, function(i, item) {
+                            $("#linklist").append(
+                                 "<tr> <td><img style='width:50px;height: 50px' src=\""+item.customerPic+"\"> </td>"
+                                +" <td>"+item.customerNick+" </td>"
+                                +" <td>"+item.cteateTime+" </td>"
+								+"</tr>"
+                            );
+                        });
+                    });
+
+        });
+    </script>
+</head>
+<body>
+
+<div data-role="page" id="pageone">
+    <div data-role="content">
+        <h2>粉丝列表</h2>
+      <table cellpadding="0" cellspacing="0" border="1"  width="100%"    id="example">
+        <thead>
+        <thead>
+        <tr>
+            <th width="15%">粉丝微信头像</th>
+            <th width="25%">粉丝微信昵称</th>
+            <th width="25%">成为该经销商的会员时间</th>
+        </tr>
+        </thead>
+ 		<tbody id="linklist" data-role="listview" data-inset="true">
+        </tbody>
+    </table>
+       
+    </div>
+</div>
+
+</body>
+</html>

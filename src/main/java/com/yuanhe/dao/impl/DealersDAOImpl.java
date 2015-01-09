@@ -124,4 +124,16 @@ public class DealersDAOImpl extends BaseDAO implements DealersDAO {
 		}
 		return dealersList.get(0).getDealersId();
 	}
+
+	@Override
+	public Dealers getDealersById(String dealersId) {
+		StringBuilder sql = new StringBuilder(
+				"select * from t_yuanhe_dealers where dealers_id ='"+dealersId+"'");
+		List<Dealers> dealersList = getJdbcTemplate().query(sql.toString(),
+				new String[] {}, new DealerRowMapper());
+		if (CollectionUtils.isEmpty(dealersList)) {
+			return null;
+		}
+		return dealersList.get(0);
+	}
 }

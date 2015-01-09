@@ -41,4 +41,9 @@ public class UserOrderServiceImpl implements UserOrderService {
 		return userOrderDAO.findOrderCount(getsSearch);
 	}
 
+	@Override
+	public List<UserOrder> findOrderListByDealId(String dealid) {
+		return userOrderDAO.findOrderListByDealId(dealid);
+	}
+
 }

@@ -160,4 +160,15 @@ public class UserOrderDAOImpl extends BaseDAO implements UserOrderDAO {
 		 return getJdbcTemplate().queryForObject(countSql.toString(), Integer.class);
 	}
 
+	@Override
+	public List<UserOrder> findOrderListByDealId(String dealid) {
+		StringBuilder sql = new StringBuilder(
+				"select * from t_yuanhe_user_order  where 1=1 ");
+		if (StringUtils.isNotEmpty(dealid)) {
+			sql.append(" and  (belongs_sales_commission='"+dealid+"' ");
+			sql.append(" or  belongs_members_commission='"+dealid+"') ");
+		}
+		return getJdbcTemplate().query(sql.toString(),new Object[]{},new UserOrderRowMapper());
+	}
+
 }

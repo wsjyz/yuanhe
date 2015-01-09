@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.yuanhe.weixin.bean.WeixinUser;
 import com.yuanhe.weixin.util.WeixinOauth;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yuanhe.domain.Customer;
 import com.yuanhe.domain.PageModel;
+import com.yuanhe.domain.PromoteLinks;
 import com.yuanhe.domain.UserOrder;
 import com.yuanhe.service.CustomerService;
 import com.yuanhe.service.UserOrderService;
@@ -51,7 +53,19 @@ public class UserOrderController {
         WeixinOauth weixinOauth = new WeixinOauth();
         WeixinOauth.AccessTokenBean accessTokenBean = weixinOauth.getOauthAccessToken(code);
         WeixinUser weixinUser = weixinOauth.getUserInfo(accessTokenBean.getAccess_token(), accessTokenBean.getOpenid());
+        model.addAttribute("unionId",weixinUser.getUnionid());
+        return "/order/orderbind";
     }
-	
-	
+    
+   @RequestMapping(value = "/toOrderByPhone")
+    public String toOrderByPhone(@RequestParam String dealerId,Model model){
+        model.addAttribute("dealerId",dealerId);
+        return "order/phoneOrderList";
+    }
+   @ResponseBody
+   @RequestMapping(value = "/find-Orderlist")
+   public List<UserOrder> findList(@RequestParam String dealerId){
+       List<UserOrder> userOrders = userOrderService.findOrderListByDealId(dealerId);
+       return userOrders;
+   }
 }

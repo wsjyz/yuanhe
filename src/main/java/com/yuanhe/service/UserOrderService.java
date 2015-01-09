@@ -11,4 +11,6 @@ public interface UserOrderService {
 	void updateOrder(UserOrder userOrder);
 	List<UserOrder> findOrderList(int getiDisplayStart, int i, String getsSearch);
 	int findOrderCount(String getsSearch);
+	List<UserOrder> findOrderListByDealId(String dealid);
+
 }

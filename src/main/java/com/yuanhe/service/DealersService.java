@@ -17,5 +17,6 @@ public interface DealersService {
     Dealers findDealerByMobileAndName(String mobile,String name);
 
     void updateDealerUnionId(Dealers dealers);
+    Dealers getDealersByID(String dealersId);
 
 }
