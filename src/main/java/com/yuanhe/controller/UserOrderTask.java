@@ -209,6 +209,7 @@ public class UserOrderTask {
 			xiaoshouId = customer.getCustomerDealers();
 			huiyuanID = visiterDealersId;
 		}
+		userOrder.setPaymentWeixinNick(customer.getCustomerNick());
 		userOrder.setPaymentUnionId(customer.getCustomerUnionId());
 		Double money = new Double(0);
 		if (StringUtils.isNotEmpty(userOrder.getRealPay())
