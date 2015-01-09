@@ -2,9 +2,13 @@ package com.yuanhe.controller;
 
 import java.util.List;
 
+import com.yuanhe.weixin.bean.WeixinUser;
+import com.yuanhe.weixin.util.WeixinOauth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yuanhe.domain.Customer;
@@ -41,6 +45,13 @@ public class UserOrderController {
 	        pt.setiDisplayLength(count);
 	        return pt;
 	    }
+
+    @RequestMapping(value = "/oauth")
+    public String oauth(@RequestParam String code,@RequestParam String state,Model model){
+        WeixinOauth weixinOauth = new WeixinOauth();
+        WeixinOauth.AccessTokenBean accessTokenBean = weixinOauth.getOauthAccessToken(code);
+        WeixinUser weixinUser = weixinOauth.getUserInfo(accessTokenBean.getAccess_token(), accessTokenBean.getOpenid());
+    }
 	
 	
 }
