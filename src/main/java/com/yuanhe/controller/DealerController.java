@@ -134,13 +134,15 @@ public class DealerController {
             WeixinUser weixinUser = JSON.parseObject(response,new TypeReference<WeixinUser>(){});
             //根据unionId查找
             String unionId = weixinUser.getUnionid();
+            System.out.println(unionId);
             Customer customer = customerService.getCustomerById(unionId);
-            if(StringUtils.isBlank(customer.getCustomerDealers())){
+            if(customer != null && StringUtils.isBlank(customer.getCustomerDealers())){
                 customer.setCustomerDealers(customerBean.getDealerId());
                 customerService.updateCustomer(customer);
             }
 
         }
+        System.out.println("--------------"+customerBean.getResponseMessage());
         return customerBean.getResponseMessage();
     }
     @ResponseBody
