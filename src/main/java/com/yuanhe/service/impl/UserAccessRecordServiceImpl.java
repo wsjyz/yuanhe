@@ -1,9 +1,11 @@
 package com.yuanhe.service.impl;
 
+import java.sql.Date;
 import java.util.List;
 
 import com.yuanhe.domain.PromoteLinks;
 import com.yuanhe.utils.StringUtil;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +32,7 @@ public class UserAccessRecordServiceImpl implements UserAccessRecordService {
     public UserAccessRecord saveAccessRecord(UserAccessRecord userAccessRecord){
         if(StringUtils.isBlank(userAccessRecord.getRecordId())){
             userAccessRecord.setRecordId(StringUtil.genUUID());
-            userAccessRecord.setVisitTime(userAccessRecord.getOptTime());
+            userAccessRecord.setVisitTime(Date.valueOf(userAccessRecord.getOptTime()));
         }
         return userAccessRecordDao.saveAccessRecord(userAccessRecord);
     }

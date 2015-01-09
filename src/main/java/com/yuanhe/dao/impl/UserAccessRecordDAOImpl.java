@@ -37,8 +37,10 @@ public class UserAccessRecordDAOImpl extends BaseDAO implements UserAccessRecord
 	@Override
 	public String getDealersIdByUnionId(String unionId) {
 		Calendar cal=Calendar.getInstance();
+		cal.set(Calendar.MONTH, cal.get(Calendar.MONTH));
 		Date startDate = cal.getTime();
-		Date endDate = cal.getTime();
+		Calendar cal1=Calendar.getInstance();
+		Date endDate = cal1.getTime();
 		StringBuilder sql = new StringBuilder(
 				"select * from t_yuanhe_user_access_record where visiter_union_id ='"
 						+ unionId + "' and visit_time BETWEEN '" + startDate
@@ -62,7 +64,7 @@ public class UserAccessRecordDAOImpl extends BaseDAO implements UserAccessRecord
                 ps.setString(1,userAccessRecord.getRecordId());
                 ps.setString(2,userAccessRecord.getVisiterUnionId());
                 ps.setString(3,userAccessRecord.getVisiterDealersId());
-                ps.setString(4,userAccessRecord.getVisitTime());
+                ps.setDate(4,userAccessRecord.getVisitTime());
                 ps.setString(5,userAccessRecord.getAccessUrlTitle());
                 ps.setString(6,userAccessRecord.getAccessUrl());
                 ps.setString(7,userAccessRecord.getOptTime());
@@ -78,7 +80,7 @@ public class UserAccessRecordDAOImpl extends BaseDAO implements UserAccessRecord
 			userAccessRecord.setRecordId(rs.getString("record_id"));
 			userAccessRecord.setVisiterUnionId(rs.getString("visiter_union_id"));
 			userAccessRecord.setVisiterDealersId(rs.getString("visiter_dealers_id"));
-			userAccessRecord.setVisitTime(rs.getString("visit_time"));
+			userAccessRecord.setVisitTime(rs.getDate("visit_time"));
 			userAccessRecord.setAccessUrlTitle(rs.getString("access_url_title"));
 			userAccessRecord.setAccessUrl(rs.getString("access_url"));
 			return userAccessRecord;

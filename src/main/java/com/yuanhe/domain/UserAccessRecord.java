@@ -1,5 +1,7 @@
 package com.yuanhe.domain;
 
+import java.sql.Date;
+
 import com.yuanhe.domain.annotation.Column;
 import com.yuanhe.domain.annotation.Table;
 
@@ -16,7 +18,7 @@ public class UserAccessRecord extends BaseDomain {
 	@Column(name = "visiter_dealers_id", comment = "被访问经销商ID", length = 32)
 	private String visiterDealersId;
 	@Column(name = "visit_time", comment = "访问时间", length = 50)
-	private String visitTime;
+	private Date visitTime;
 	@Column(name = "access_url_title", comment = "访问的链接名称", length = 50)
 	private String accessUrlTitle;
 	@Column(name = "access_url", comment = "访问的链接地址", length = 50)
@@ -46,11 +48,11 @@ public class UserAccessRecord extends BaseDomain {
 		this.visiterDealersId = visiterDealersId;
 	}
 
-	public String getVisitTime() {
+	public Date getVisitTime() {
 		return visitTime;
 	}
 
-	public void setVisitTime(String visitTime) {
+	public void setVisitTime(Date visitTime) {
 		this.visitTime = visitTime;
 	}
 
