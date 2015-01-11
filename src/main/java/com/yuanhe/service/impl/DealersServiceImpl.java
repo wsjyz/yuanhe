@@ -37,6 +37,7 @@ public class DealersServiceImpl implements DealersService {
             dealers.setDealersName(corpUser.getName());
             dealers.setDealersMobile(corpUser.getMobile());
             dealers.setDealersStatus(corpUser.getStatus()+"");
+            dealers.setWeixinId(corpUser.getWeixinid()+"");
             dealersList.add(dealers);
         }
         return dealersDAO.saveDelearBatch(dealersList);

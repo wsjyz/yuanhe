@@ -3,11 +3,13 @@ package com.yuanhe.dao.impl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import com.yuanhe.domain.PromoteLinks;
+
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -37,14 +39,15 @@ public class UserAccessRecordDAOImpl extends BaseDAO implements UserAccessRecord
 	@Override
 	public String getDealersIdByUnionId(String unionId) {
 		Calendar cal=Calendar.getInstance();
-		cal.set(Calendar.MONTH, cal.get(Calendar.MONTH));
+		cal.set(Calendar.MONTH, cal.get(Calendar.MONTH)-1);
 		Date startDate = cal.getTime();
 		Calendar cal1=Calendar.getInstance();
 		Date endDate = cal1.getTime();
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		StringBuilder sql = new StringBuilder(
 				"select * from t_yuanhe_user_access_record where visiter_union_id ='"
-						+ unionId + "' and visit_time BETWEEN '" + startDate
-						+ "' and '" + endDate + "' order by visit_time desc ");
+						+ unionId + "' and visit_time BETWEEN '" + sdf.format(startDate)
+						+ "' and '" + sdf.format(endDate) + "' order by visit_time desc ");
 		List<UserAccessRecord> userRecordList = getJdbcTemplate().query(sql.toString(),
 				new String[] {}, new UserRecordRowMapper());
 		if (CollectionUtils.isEmpty(userRecordList)) {

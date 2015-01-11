@@ -6,18 +6,12 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import com.alibaba.fastjson.JSONObject;
 
 public class WerxinGetUser {
-	private static final String store_APPID = "wx51e688b02487dfc4";
-	private static final String store_APPSECRET = "073d77dfeee8c1fef0df4ec9a83a4de5";
-	private static final String shop_APPID = "wx805e0d1e1ff4c357";
-	private static final String shop_APPSECRET = "e4be73256423d9c76b941d815ff735df";
 	private static final String token_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=";
 	private static final String user_URL = "https://api.weixin.qq.com/cgi-bin/user/info";
 
@@ -69,8 +63,9 @@ public class WerxinGetUser {
 
 	public static void main(String[] args) {
 		WerxinGetUser werxinGetUser = new WerxinGetUser();
-		String token =werxinGetUser.getTokenByStore();
-		String params = "{\"touser\": \""+2+"\",\"toparty\": \""+3+"\",\"totag\": \""+3+"\",\"msgtype\": \"text\",\"agentid\": \"1\",\"text\": {\"content\": \"Holiday Request For Pony(http://xxxxx)\"},\"safe\":\"0\"}";
+		WeixinUtils weixinUtils=new WeixinUtils();
+		String token =weixinUtils.getCorpAccessToken();
+		String params = "{\"touser\": \"11111\",\"msgtype\": \"text\",\"agentid\": \"1\",\"text\": {\"content\":  \"尊敬的XXX(名称),恭喜您获得一笔新佣金，客服XXX(顾客微信昵称)购买的XXXX（商品名）已经于XXX年XXX月XX日签收，您获得佣金：XXX元，佣金类型：会员佣金\"},\"safe\":\"0\"}";
 		String sendGet = werxinGetUser.sendPostByEmail(params,token);
 		System.out.println(sendGet);
 	}
@@ -78,7 +73,7 @@ public class WerxinGetUser {
 	
 	public String getTokenByStore() {
 		String result = "";
-		String url =token_URL+store_APPID+"&secret="+store_APPSECRET;
+		String url =token_URL+Contants.WOMAN_APPID+"&secret="+Contants.WOMAN_SECRET;
 		BufferedReader in = null;
 		try {
 			URL realUrl = new URL(url);
@@ -118,7 +113,7 @@ public class WerxinGetUser {
 	}
 	public String getTokenByShop() {
 		String result = "";
-		String url ="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+shop_APPID+"&secret="+shop_APPSECRET;
+		String url ="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+Contants.APPID+"&secret="+Contants.SECRET;
 		BufferedReader in = null;
 		try {
 			URL realUrl = new URL(url);
@@ -170,6 +165,7 @@ public class WerxinGetUser {
         PrintWriter out = null;
         BufferedReader in = null;
         String result = "";
+        logger.info("*************+token********************"+token);
         try {
             URL realUrl = new URL("https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token="+token);
             // 打开和URL之间的连接
@@ -212,6 +208,7 @@ public class WerxinGetUser {
     			logger.info(ex);
             }
         }
+        logger.info("*************+result********************"+result);
         return result;
     }    
 

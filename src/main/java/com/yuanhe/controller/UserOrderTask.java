@@ -22,6 +22,7 @@ import com.yuanhe.service.UserAccessRecordService;
 import com.yuanhe.service.UserOrderService;
 import com.yuanhe.utils.KDTApiUtils;
 import com.yuanhe.utils.WeixinByUserUtils;
+import com.yuanhe.utils.WeixinUtils;
 import com.yuanhe.utils.WerxinGetUser;
 import com.yuanhe.utils.Contants;
 
@@ -39,7 +40,7 @@ public class UserOrderTask {
 
 	@Scheduled(cron = "0 0/5 *  * * ? ")
 	public void getNewUserOrder() {
-		logger.info("进入订单获取");
+		logger.info("************start order ***************");
 		try {
 			KDTApiUtils apiUtils = new KDTApiUtils();
 			List<UserOrder> sendOrderList = apiUtils.sendOrderList();
@@ -50,7 +51,7 @@ public class UserOrderTask {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		logger.info("订单获取完毕 ");
+		logger.info("***************end order***************");
 	}
 
 	private void NewOrder(UserOrder userOrder, List<UserOrder> userOrderOldList) {
@@ -66,7 +67,7 @@ public class UserOrderTask {
 					userOrder2.setOrderMoney("0");
 					userOrderService.updateOrder(userOrder2);
 					refundOrderSend(userOrder, userOrder2);
-					logger.info("有新订单更新 ");
+					logger.info("*************** order update refund ");
 				}
 			}
 		} else {
@@ -81,83 +82,68 @@ public class UserOrderTask {
 			}
 			if (!isCheck) {
 				WerxinGetUser werxinGetUser = new WerxinGetUser();
-				Customer customer = new Customer();
-				setUserOrderByCustomer(userOrder, werxinGetUser, customer);
-				addOrderSend(userOrder, werxinGetUser, customer);
-				logger.info("有新订单添加");
+				setUserOrderByCustomer(userOrder, werxinGetUser);
+				addOrderSend(userOrder, werxinGetUser);
+				logger.info("*************** order add  "+userOrder.getOrderId());
 			}
 		}
 	}
 
 	private void refundOrderSend(UserOrder userOrder, UserOrder userOrder2) {
 		WerxinGetUser werxinGetUser = new WerxinGetUser();
-		Customer customer=customerService.getCustomerById(userOrder2.getPaymentUnionId());
+		WeixinUtils weixinUtils=new WeixinUtils();
 		Dealers dealers = dealersService.getDealersByID(userOrder.getBelongsMembersCommission());
 		if (dealers!=null && StringUtils.isNotEmpty(dealers.getDealersId()) && !"0".equals(dealers.getDealersId())) {
 			String params = "{\"touser\": \""
 					+ userOrder.getBelongsMembersCommission()
-					+ "\",\"toparty\": \""
-					+ customer.getCustomerDealers()
-					+ "\",\"totag\": \""
-					+ 3
 					+ "\",\"msgtype\": \"text\",\"agentid\": \"1\",\"text\": {\"content\": \"尊敬的"+dealers.getDealersName()+",客户"
-					+customer.getCustomerNick()+"购买的"+userOrder.getCommodityName()
+					+userOrder.getPaymentWeixinNick()+"购买的"+userOrder.getCommodityName()
 					+",做了退款处理，原来获得的销售佣金变为0!\"},\"safe\":\"0\"}";
-			werxinGetUser.sendPostByEmail(params,werxinGetUser.getTokenByShop());
+			werxinGetUser.sendPostByEmail(params,weixinUtils.getCorpAccessToken());
 
 		}
 		Dealers dealers1 = dealersService.getDealersByID(userOrder.getBelongsSalesCommission());
 		if (dealers1!=null && StringUtils.isNotEmpty(dealers1.getDealersId()) && !"0".equals(dealers1.getDealersId())) {
 			String params1 = "{\"touser\": \""
-					+ userOrder.getBelongsMembersCommission()+"|"+userOrder.getBelongsSalesCommission()
-					+ "\",\"toparty\": \""
-					+ customer.getCustomerDealers()
-					+ "\",\"totag\": \""
-					+ 3
+					+ userOrder.getBelongsMembersCommission()
 					+ "\",\"msgtype\": \"text\",\"agentid\": \"1\",\"text\":  {\"content\": \"尊敬的"+dealers1.getDealersName()+",客户"
-					+customer.getCustomerNick()+"购买的"+userOrder.getCommodityName()
+					+userOrder.getPaymentWeixinNick()+"购买的"+userOrder.getCommodityName()
 					+",做了退款处理，原来获得的会员佣金变为0!\"},\"safe\":\"0\"}";
 			werxinGetUser.sendPostByEmail(params1,
-					werxinGetUser.getTokenByShop());
+					weixinUtils.getCorpAccessToken());
 		
 		}
 	}
 
-	private void addOrderSend(UserOrder userOrder, WerxinGetUser werxinGetUser,
-			Customer customer) {
+	private void addOrderSend(UserOrder userOrder, WerxinGetUser werxinGetUser) {
+		WeixinUtils weixinUtils=new WeixinUtils();
 		Dealers dealers = dealersService.getDealersByID(userOrder.getBelongsMembersCommission());
 		Calendar cal=Calendar.getInstance();
 		if (dealers!=null && StringUtils.isNotEmpty(dealers.getDealersId()) && !"0".equals(dealers.getDealersId())) {
 		String params = "{\"touser\": \""
 				+ userOrder.getBelongsMembersCommission()
-				+ "\",\"toparty\": \""
-				+ customer.getCustomerDealers()
-				+ "\",\"totag\": \""
-				+ 3
 				+ "\",\"msgtype\": \"text\",\"agentid\": \"1\",\"text\": {\"content\": \"尊敬的"+dealers.getDealersName()+",恭喜您获得一笔新佣金，客户"
-				+customer.getCustomerNick()+"购买的"+userOrder.getCommodityName()
+				+userOrder.getPaymentWeixinNick()+"购买的"+userOrder.getCommodityName()
 				+"已经于"+cal.get(Calendar.YEAR)+"年"+(cal.get(Calendar.MONTH)+1)+"月"+cal.get(Calendar.DAY_OF_MONTH)+"日签收，您获得佣金："+userOrder.getMembersCommissionMoney()+"元，佣金类型：会员佣金\"},\"safe\":\"0\"}";
-		werxinGetUser.sendPostByEmail(params,
-				werxinGetUser.getTokenByShop());
+		String byEmail = werxinGetUser.sendPostByEmail(params,
+				weixinUtils.getCorpAccessToken());
+		logger.info(byEmail);
 		}
 		Dealers dealers1 = dealersService.getDealersByID(userOrder.getBelongsSalesCommission());
 		if (dealers1!=null && StringUtils.isNotEmpty(dealers1.getDealersId()) && !"0".equals(dealers1.getDealersId())) {
-			String params1 = "{\"touser\": \""
-					+ userOrder.getBelongsMembersCommission()+"|"+userOrder.getBelongsSalesCommission()
-					+ "\",\"toparty\": \""
-					+ customer.getCustomerDealers()
-					+ "\",\"totag\": \""
-					+ 3
-					+ "\",\"msgtype\": \"text\",\"agentid\": \"1\",\"text\":  {\"content\": \"尊敬的"+dealers1.getDealersName()+",恭喜您获得一笔新佣金，客户"
-					+customer.getCustomerNick()+"购买的"+userOrder.getCommodityName()
+			String params1 = "{\"touser\": \""+userOrder.getBelongsSalesCommission()
+				 + "\",\"msgtype\": \"text\",\"agentid\": \"1\",\"text\":  {\"content\": \"尊敬的"+dealers1.getDealersName()+",恭喜您获得一笔新佣金，客户"
+					+userOrder.getPaymentWeixinNick()+"购买的"+userOrder.getCommodityName()
 					+"已经于"+cal.get(Calendar.YEAR)+"年"+(cal.get(Calendar.MONTH)+1)+"月"+cal.get(Calendar.DAY_OF_MONTH)+"日签收，您获得佣金："+userOrder.getSalesCommissionMoney()+"元，佣金类型：销售佣金\"},\"safe\":\"0\"}";
-			werxinGetUser.sendPostByEmail(params1,
-					werxinGetUser.getTokenByShop());
+			logger.info(weixinUtils.getCorpAccessToken());	
+			String byEmail =werxinGetUser.sendPostByEmail(params1,
+						weixinUtils.getCorpAccessToken());
+			logger.info(byEmail);
 		}
 	}
 
 	private void setUserOrderByCustomer(UserOrder userOrder,
-			WerxinGetUser werxinGetUser, Customer customer) {
+			WerxinGetUser werxinGetUser) {
 		// 如果是新订单则生成订单且检查订单用户
 		// 获取订单用户信息
 
@@ -168,7 +154,7 @@ public class UserOrderTask {
 		String userUnionId = jsonObj.getString("unionid");
 		String visiterDealersId = null;
 		// 检查买家是否是第一次购买
-		customer = customerService.getCustomerById(userUnionId);
+		Customer customer = customerService.getCustomerById(userUnionId);
 		String xiaoshouId = null;
 		String huiyuanID = null;
 		if (customer == null) {
@@ -206,8 +192,8 @@ public class UserOrderTask {
 				//如果没有访问的经销商ID，就用原来的元和的ID
 				visiterDealersId =  dealersService.getYuanHeDealersId();
 			}
-			xiaoshouId = customer.getCustomerDealers();
-			huiyuanID = visiterDealersId;
+			xiaoshouId = visiterDealersId;
+			huiyuanID =customer.getCustomerDealers() ;
 		}
 		userOrder.setPaymentWeixinNick(customer.getCustomerNick());
 		userOrder.setPaymentUnionId(customer.getCustomerUnionId());

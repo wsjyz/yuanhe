@@ -65,7 +65,7 @@ public class DealersDAOImpl extends BaseDAO implements DealersDAO {
         getJdbcTemplate().execute(delSql.toString());
         StringBuilder topSql = new StringBuilder("insert into ").append(TABLE_NAME)
                 .append(" (dealers_id,dealers_name,dealers_mobile,dealers_status,dealers_type," +
-                        "dealers_qr_code,dealers_qr_url,opt_time) values(?,?,?,?,?,?,?,?);");
+                        "dealers_qr_code,dealers_qr_url,opt_time,wei_xinId) values(?,?,?,?,?,?,?,?,?);");
         int[] result = getJdbcTemplate().batchUpdate(topSql.toString(),new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -78,6 +78,8 @@ public class DealersDAOImpl extends BaseDAO implements DealersDAO {
                 ps.setString(6,dealers.getDealersQrCode());
                 ps.setString(7,dealers.getDealersQrUrl());
                 ps.setString(8,dealers.getOptTime());
+                ps.setString(9,dealers.getWeixinId());
+
             }
 
             @Override
@@ -109,6 +111,7 @@ public class DealersDAOImpl extends BaseDAO implements DealersDAO {
             dealers.setDealersQrUrl(rs.getString("dealers_qr_url"));
             dealers.setDealersType(rs.getString("dealers_type"));
             dealers.setOptTime(rs.getString("opt_time"));
+            dealers.setWeixinId(rs.getString("wei_xinId"));
             return dealers;
         }
     }

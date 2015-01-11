@@ -17,6 +17,7 @@ import com.yuanhe.domain.PageModel;
 import com.yuanhe.domain.PromoteLinks;
 import com.yuanhe.domain.UserOrder;
 import com.yuanhe.service.CustomerService;
+import com.yuanhe.service.UserAccessRecordService;
 import com.yuanhe.service.UserOrderService;
 
 @Controller
@@ -25,7 +26,6 @@ public class UserOrderController {
 
 	@Autowired
 	UserOrderService userOrderService;
-
 
 	   @RequestMapping(value = "/toOrder")
 	    public String toAddGoods() {

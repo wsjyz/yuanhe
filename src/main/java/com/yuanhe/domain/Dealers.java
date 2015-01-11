@@ -23,20 +23,30 @@ public class Dealers extends BaseDomain {
 	private String dealersQrCode;
 	@Column(name = "dealers_qr_url", comment = "经销商二维码URL", length = 50)
 	private String dealersQrUrl;
-    @Column(name = "parent_id", comment = "父级id", length = 32)
-    private String parentId;
-    @Column(name = "union_id", comment = "unionid", length = 50)
-    private String unionId;
+	@Column(name = "parent_id", comment = "父级id", length = 32)
+	private String parentId;
+	@Column(name = "union_id", comment = "unionid", length = 50)
+	private String unionId;
+	@Column(name = "wei_xinId", comment = "weixinId", length = 50)
+	private String weixinId;
 
-    public String getUnionId() {
-        return unionId;
-    }
+	public String getWeixinId() {
+		return weixinId;
+	}
 
-    public void setUnionId(String unionId) {
-        this.unionId = unionId;
-    }
+	public void setWeixinId(String weixinId) {
+		this.weixinId = weixinId;
+	}
 
-    public String getDealersId() {
+	public String getUnionId() {
+		return unionId;
+	}
+
+	public void setUnionId(String unionId) {
+		this.unionId = unionId;
+	}
+
+	public String getDealersId() {
 		return dealersId;
 	}
 
@@ -92,11 +102,11 @@ public class Dealers extends BaseDomain {
 		this.dealersQrUrl = dealersQrUrl;
 	}
 
-    public String getParentId() {
-        return parentId;
-    }
+	public String getParentId() {
+		return parentId;
+	}
 
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
-    }
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
 }
