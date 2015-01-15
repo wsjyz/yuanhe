@@ -139,6 +139,16 @@ public class DealerController {
             if(customer != null && StringUtils.isBlank(customer.getCustomerDealers())){
                 customer.setCustomerDealers(customerBean.getDealerId());
                 customerService.updateCustomer(customer);
+            }else if(customer == null){
+                customer = new Customer();
+                customer.setCustomerDealers(customerBean.getDealerId());
+                customer.setCteateTime(customer.getOptTime());
+                customer.setCustomerNick(weixinUser.getNickname());
+                customer.setCustomerPic(weixinUser.getHeadimgurl());
+                customer.setCustomerProvice(weixinUser.getProvince());
+                customer.setCustomerUnionId(weixinUser.getUnionid());
+                customer.setOpenId(weixinUser.getOpenId());
+                customerService.saveCustomer(customer);
             }
 
         }

@@ -18,6 +18,12 @@
 	<mvc:default-servlet-handler />
     <mvc:annotation-driven/>
 
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path = "/dealer/tolist"/>
+            <bean class="com.yuanhe.web.LoginInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
 
 
 	<!--转换器 使Controller方法可以自动转换不同格式类型 不加会报400错 -->
