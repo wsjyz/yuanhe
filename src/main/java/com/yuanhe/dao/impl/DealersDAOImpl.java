@@ -22,6 +22,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository("DealersDAO")
@@ -60,33 +61,34 @@ public class DealersDAOImpl extends BaseDAO implements DealersDAO {
     @Override
     public int saveDelearBatch(final List<Dealers> dealersList) {
         //删除原来的
-        StringBuilder delSql = new StringBuilder("delete from ");
-        delSql.append(TABLE_NAME);
-        getJdbcTemplate().execute(delSql.toString());
-        StringBuilder topSql = new StringBuilder("insert into ").append(TABLE_NAME)
-                .append(" (dealers_id,dealers_name,dealers_mobile,dealers_status,dealers_type," +
-                        "dealers_qr_code,dealers_qr_url,opt_time,wei_xinId) values(?,?,?,?,?,?,?,?,?);");
-        int[] result = getJdbcTemplate().batchUpdate(topSql.toString(),new BatchPreparedStatementSetter() {
-            @Override
-            public void setValues(PreparedStatement ps, int i) throws SQLException {
-                Dealers dealers = dealersList.get(i);
-                ps.setString(1,dealers.getDealersId());
-                ps.setString(2,dealers.getDealersName());
-                ps.setString(3,dealers.getDealersMobile());
-                ps.setString(4,dealers.getDealersStatus());
-                ps.setString(5,dealers.getDealersType());
-                ps.setString(6,dealers.getDealersQrCode());
-                ps.setString(7,dealers.getDealersQrUrl());
-                ps.setString(8,dealers.getOptTime());
-                ps.setString(9,dealers.getWeixinId());
+//        StringBuilder delSql = new StringBuilder("delete from ");
+//        delSql.append(TABLE_NAME);
+//        getJdbcTemplate().execute(delSql.toString());
+        List<String> sqlList = new ArrayList<String>();
+        for(Dealers dealers:dealersList){
+            if(dealers != null){
+                StringBuilder sql = new StringBuilder("SELECT * FROM ");
+                sql.append(TABLE_NAME);
+                sql.append(" where dealers_id = ? ");
+                List<Dealers> list = getJdbcTemplate().query(sql.toString(),new Object[]{dealers.getDealersId()},new DealerRowMapper());
+                if(list != null && list.size() > 0){
+                    String batchSql = "update "+TABLE_NAME+" set dealers_name = '"+dealers.getDealersName()+"'," +
+                            "dealers_mobile='"+dealers.getDealersMobile()+"',dealers_status='"+dealers.getDealersStatus()+"'," +
+                            "opt_time='"+dealers.getOptTime()+"',wei_xinId='"+dealers.getWeixinId()+"' where dealers_id='"+dealers.getDealersId()+"'";
+                    sqlList.add(batchSql);
 
+                }else{
+                    String batchSql = "insert into "+TABLE_NAME+" (dealers_id,dealers_name,dealers_mobile,dealers_status,dealers_type," +
+                            "dealers_qr_code,dealers_qr_url,opt_time,wei_xinId) values('"+dealers.getDealersId()+"'" +
+                            ",'"+dealers.getDealersName()+"','"+dealers.getDealersMobile()+"'," +
+                            "'"+dealers.getDealersStatus()+"','"+dealers.getDealersType()+"','"+dealers.getDealersQrCode()+"'" +
+                            ",'"+dealers.getDealersQrUrl()+"','"+dealers.getOptTime()+"','"+dealers.getWeixinId()+"');";
+                    sqlList.add(batchSql);
+                }
             }
+        }
+        int[] result = getJdbcTemplate().batchUpdate((String[])sqlList.toArray(new String[sqlList.size()]));
 
-            @Override
-            public int getBatchSize() {
-                return dealersList.size();
-            }
-        });
 
         return result.length;
 
