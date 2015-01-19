@@ -2,12 +2,14 @@ package com.yuanhe.utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
+import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -20,10 +22,19 @@ public class KDTApiUtils {
 	private static final String APP_ID = "50f9027f6583b5f314"; // 这里换成你的app_id
 	private static final String APP_SECRET = "43b9e64a063e9978bcc89e77c01cc969"; // 这里换成你的app_secret
 
-	public List<UserOrder> sendOrderList() {
+	public List<UserOrder> sendOrderList(List<UserOrder> userOrderListOld) {
 		String method = "kdt.trades.sold.get";
 		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("end_update", new Date().toString());
+		if (!CollectionUtils.isEmpty(userOrderListOld)) {
+			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Calendar cal=Calendar.getInstance();
+			Calendar cal1=Calendar.getInstance();
+			cal1.set(Calendar.HOUR_OF_DAY, 0);
+			cal1.set(Calendar.MINUTE, 0);
+			cal1.set(Calendar.SECOND, 0);
+			params.put("start_update", sdf.format(cal1.getTime()));
+			params.put("end_update", sdf.format(cal.getTime()));
+		}
 		KdtApiClient kdtApiClient;
 		HttpResponse response;
 		List<UserOrder> userOrderList = new ArrayList<UserOrder>();

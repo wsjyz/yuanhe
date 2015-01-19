@@ -32,8 +32,8 @@ public class UserOrderServiceImpl implements UserOrderService {
 
 	@Override
 	public List<UserOrder> findOrderList(int getiDisplayStart, int i,
-			String getsSearch) {
-		return userOrderDAO.findOrderList(getiDisplayStart,i,getsSearch);
+			String getsSearch,String startTime,String endTime) {
+		return userOrderDAO.findOrderList(getiDisplayStart,i,getsSearch,startTime,endTime);
 	}
 
 	@Override
@@ -42,8 +42,8 @@ public class UserOrderServiceImpl implements UserOrderService {
 	}
 
 	@Override
-	public List<UserOrder> findOrderListByDealId(String dealid) {
-		return userOrderDAO.findOrderListByDealId(dealid);
+	public List<UserOrder> findOrderListByDealId(String dealid,String year,String month) {
+		return userOrderDAO.findOrderListByDealId(dealid,year,month);
 	}
 
 }

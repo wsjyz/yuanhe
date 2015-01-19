@@ -8,7 +8,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import com.yuanhe.domain.PromoteLinks;
 
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
@@ -46,8 +45,8 @@ public class UserAccessRecordDAOImpl extends BaseDAO implements UserAccessRecord
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		StringBuilder sql = new StringBuilder(
 				"select * from t_yuanhe_user_access_record where visiter_union_id ='"
-						+ unionId + "' and visit_time BETWEEN '" + sdf.format(startDate)
-						+ "' and '" + sdf.format(endDate) + "' order by visit_time desc ");
+						+ unionId + "' and visit_time >= '" + sdf.format(startDate)
+						+ "' and visit_time<='" + sdf.format(endDate) + "' order by visit_time desc ");
 		List<UserAccessRecord> userRecordList = getJdbcTemplate().query(sql.toString(),
 				new String[] {}, new UserRecordRowMapper());
 		if (CollectionUtils.isEmpty(userRecordList)) {
@@ -67,7 +66,8 @@ public class UserAccessRecordDAOImpl extends BaseDAO implements UserAccessRecord
                 ps.setString(1,userAccessRecord.getRecordId());
                 ps.setString(2,userAccessRecord.getVisiterUnionId());
                 ps.setString(3,userAccessRecord.getVisiterDealersId());
-                ps.setDate(4,userAccessRecord.getVisitTime());
+                java.sql.Timestamp date=new java.sql.Timestamp(userAccessRecord.getVisitTime().getTime());
+                ps.setTimestamp(4,date);
                 ps.setString(5,userAccessRecord.getAccessUrlTitle());
                 ps.setString(6,userAccessRecord.getAccessUrl());
                 ps.setString(7,userAccessRecord.getOptTime());

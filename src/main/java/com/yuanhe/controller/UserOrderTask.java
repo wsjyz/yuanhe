@@ -2,7 +2,6 @@ package com.yuanhe.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +20,6 @@ import com.yuanhe.service.DealersService;
 import com.yuanhe.service.UserAccessRecordService;
 import com.yuanhe.service.UserOrderService;
 import com.yuanhe.utils.KDTApiUtils;
-import com.yuanhe.utils.WeixinByUserUtils;
 import com.yuanhe.utils.WeixinUtils;
 import com.yuanhe.utils.WerxinGetUser;
 import com.yuanhe.utils.Contants;
@@ -43,8 +41,8 @@ public class UserOrderTask {
 		logger.info("************start order ***************");
 		try {
 			KDTApiUtils apiUtils = new KDTApiUtils();
-			List<UserOrder> sendOrderList = apiUtils.sendOrderList();
 			List<UserOrder> orderList = userOrderService.getUserOrderList();
+			List<UserOrder> sendOrderList = apiUtils.sendOrderList(orderList);
 			for (UserOrder userOrder : sendOrderList) {
 				NewOrder(userOrder, orderList);
 			}

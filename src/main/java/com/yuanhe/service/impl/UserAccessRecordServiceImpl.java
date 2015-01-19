@@ -1,6 +1,6 @@
 package com.yuanhe.service.impl;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 import com.yuanhe.domain.PromoteLinks;
@@ -32,7 +32,8 @@ public class UserAccessRecordServiceImpl implements UserAccessRecordService {
     public UserAccessRecord saveAccessRecord(UserAccessRecord userAccessRecord){
         if(StringUtils.isBlank(userAccessRecord.getRecordId())){
             userAccessRecord.setRecordId(StringUtil.genUUID());
-            userAccessRecord.setVisitTime(Date.valueOf(userAccessRecord.getOptTime()));
+            
+            userAccessRecord.setVisitTime(new Date());
         }
         return userAccessRecordDao.saveAccessRecord(userAccessRecord);
     }
