@@ -37,8 +37,8 @@ public class UserOrderServiceImpl implements UserOrderService {
 	}
 
 	@Override
-	public int findOrderCount(String getsSearch) {
-		return userOrderDAO.findOrderCount(getsSearch);
+	public int findOrderCount(String getsSearch,String startTime,String endTime) {
+		return userOrderDAO.findOrderCount(getsSearch,startTime,endTime);
 	}
 
 	@Override

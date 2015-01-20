@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta id="viewport" name="viewport" content="width=320; initial-scale=1.0;maximum-scale=1.0; user-scalable=no;"/>
 <script src="${request.contextPath}/js/jquery-2.0.0.min.js"></script>
 <script type="application/javascript">
 	
         $(function(){
+        	$('#year').val("");
+			$('#month').val("");
             $.getJSON("${request.contextPath}/order/find-Orderlist?dealerId=${dealerId}&year=&month=",
                     function(data) {
             	var summoney=0.0;

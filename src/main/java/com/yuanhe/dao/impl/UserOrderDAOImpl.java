@@ -186,15 +186,23 @@ public class UserOrderDAOImpl extends BaseDAO implements UserOrderDAO {
 	}
 
 	@Override
-	public int findOrderCount(String getsSearch) {
-		   StringBuilder countSql = new StringBuilder(
-	                "select count(*) from t_yuanhe_user_order where 1=1");
-		   if (StringUtils.isNotEmpty(getsSearch)) {
-			   countSql.append(" and  (sales_commission_money='"+getsSearch+"' ");
-			   countSql.append(" or  members_commission_money='"+getsSearch+"' ");
-			   countSql.append(" or  update_time like '%"+getsSearch+"%') ");
-			}
-		 return getJdbcTemplate().queryForObject(countSql.toString(), Integer.class);
+	public int findOrderCount(String getsSearch,String startTime,String endTime) {
+		StringBuilder sql = new StringBuilder(
+				"select count(*) from t_yuanhe_user_order  uo "
+				+ "left join t_yuanhe_dealers deal on deal.dealers_id=uo.belongs_sales_commission "
+				+ " left join t_yuanhe_dealers deal1 on deal1.dealers_id=uo.belongs_members_commission ");
+		sql.append(" where  1=1 ");
+		if (StringUtils.isNotEmpty(getsSearch)) {
+			sql.append("  and (deal.dealers_name like '%"+getsSearch+"%' or deal1.dealers_name like '%"+getsSearch+"%')");
+			
+		}
+		if (StringUtils.isNotEmpty(startTime)) {
+			sql.append(" and uo.update_time>= '"+startTime+"'");
+		}
+		if (StringUtils.isNotEmpty(endTime)) {
+			sql.append(" and  uo.update_time<= '"+endTime+"' ");
+		}
+		 return getJdbcTemplate().queryForObject(sql.toString(), Integer.class);
 	}
 
 	@Override

@@ -10,7 +10,7 @@ public interface UserOrderService {
 	void saveOrder(UserOrder userOrder);
 	void updateOrder(UserOrder userOrder);
 	List<UserOrder> findOrderList(int getiDisplayStart, int i, String getsSearch,String startTime,String endTime);
-	int findOrderCount(String getsSearch);
+	int findOrderCount(String getsSearch, String startTime, String endTime);
 	List<UserOrder> findOrderListByDealId(String dealid, String year, String month);
 
 }
