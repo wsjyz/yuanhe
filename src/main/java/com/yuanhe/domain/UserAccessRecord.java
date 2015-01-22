@@ -1,6 +1,6 @@
 package com.yuanhe.domain;
 
-import java.sql.Date;
+import java.util.Date;
 
 import com.yuanhe.domain.annotation.Column;
 import com.yuanhe.domain.annotation.Table;

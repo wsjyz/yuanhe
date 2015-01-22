@@ -53,6 +53,35 @@ public class UserOrderDAOImpl extends BaseDAO implements UserOrderDAO {
 		}
 	}
 
+
+	public class UserOrderByDealRowMapper implements RowMapper<UserOrder> {
+
+		@Override
+		public UserOrder mapRow(ResultSet rs, int rowNum) throws SQLException {
+			UserOrder userOrder = new UserOrder();
+			userOrder.setOrderId(rs.getString("order_id"));
+			userOrder.setPaymentUnionId(rs.getString("payment_union_id"));
+			userOrder.setPaymentWeixinNick(rs.getString("payment_weixin_nick"));
+			userOrder.setOrderStatus(rs.getString("order_status"));
+			userOrder.setBelongsSalesCommission(rs
+					.getString("belongs_sales_commission"));
+			userOrder.setSalesCommissionMoney(rs
+					.getString("sales_commission_money"));
+			userOrder.setBelongsMembersCommission(rs
+					.getString("belongs_members_commission"));
+			userOrder.setMembersCommissionMoney(rs
+					.getString("members_commission_money"));
+			userOrder.setRealPay(rs.getString("real_pay"));
+			userOrder.setPostageMoney(rs.getString("postage_money"));
+			userOrder.setOrderMoney(rs.getString("order_money"));
+			userOrder.setCommodityName(rs.getString("commodity_name"));
+			userOrder.setCommodityPic(rs.getString("commodity_pic"));
+			userOrder.setUpdateTime(rs.getString("update_time"));
+			userOrder.setBelongsMembersCommissionName(rs.getString("belongs_members_name"));
+			userOrder.setBelongsSalesCommissionName(rs.getString("belongs_sales_name"));
+			return userOrder;
+		}
+	}
 	@Override
 	public void saveOrder(final UserOrder userOrder) {
 		final String orderId = userOrder.getOrderId();
@@ -136,38 +165,61 @@ public class UserOrderDAOImpl extends BaseDAO implements UserOrderDAO {
 
 	@Override
 	public List<UserOrder> findOrderList(int getiDisplayStart, int i,
-			String getsSearch) {
+			String getsSearch,String startTime,String endTime) {
 		StringBuilder sql = new StringBuilder(
-				"select * from t_yuanhe_user_order  where 1=1 ");
+				"select uo.*,deal.dealers_name as belongs_sales_name,deal1.dealers_name as belongs_members_name from t_yuanhe_user_order  uo "
+				+ "left join t_yuanhe_dealers deal on deal.dealers_id=uo.belongs_sales_commission "
+				+ " left join t_yuanhe_dealers deal1 on deal1.dealers_id=uo.belongs_members_commission ");
+		sql.append(" where  1=1 ");
 		if (StringUtils.isNotEmpty(getsSearch)) {
-			sql.append(" and  (sales_commission_money='"+getsSearch+"' ");
-			sql.append(" or  members_commission_money='"+getsSearch+"' ");
-			sql.append(" or  update_time like '%"+getsSearch+"%') ");
+			sql.append("  and (deal.dealers_name like '%"+getsSearch+"%' or deal1.dealers_name like '%"+getsSearch+"%')");
+			
 		}
-		  sql.append(" order by order_id,update_time desc LIMIT ?,?");
-	   return getJdbcTemplate().query(sql.toString(),new Object[]{getiDisplayStart,i},new UserOrderRowMapper());
+		if (StringUtils.isNotEmpty(startTime)) {
+			sql.append(" and uo.update_time>= '"+startTime+"'");
+		}
+		if (StringUtils.isNotEmpty(endTime)) {
+			sql.append(" and  uo.update_time<= '"+endTime+"' ");
+		}
+		  sql.append(" order by  uo.order_id, uo.update_time desc LIMIT ?,?");
+	   return getJdbcTemplate().query(sql.toString(),new Object[]{getiDisplayStart,i},new UserOrderByDealRowMapper());
 	}
 
 	@Override
-	public int findOrderCount(String getsSearch) {
-		   StringBuilder countSql = new StringBuilder(
-	                "select count(*) from t_yuanhe_user_order where 1=1");
-		   if (StringUtils.isNotEmpty(getsSearch)) {
-			   countSql.append(" and  (sales_commission_money='"+getsSearch+"' ");
-			   countSql.append(" or  members_commission_money='"+getsSearch+"' ");
-			   countSql.append(" or  update_time like '%"+getsSearch+"%') ");
-			}
-		 return getJdbcTemplate().queryForObject(countSql.toString(), Integer.class);
+	public int findOrderCount(String getsSearch,String startTime,String endTime) {
+		StringBuilder sql = new StringBuilder(
+				"select count(*) from t_yuanhe_user_order  uo "
+				+ "left join t_yuanhe_dealers deal on deal.dealers_id=uo.belongs_sales_commission "
+				+ " left join t_yuanhe_dealers deal1 on deal1.dealers_id=uo.belongs_members_commission ");
+		sql.append(" where  1=1 ");
+		if (StringUtils.isNotEmpty(getsSearch)) {
+			sql.append("  and (deal.dealers_name like '%"+getsSearch+"%' or deal1.dealers_name like '%"+getsSearch+"%')");
+			
+		}
+		if (StringUtils.isNotEmpty(startTime)) {
+			sql.append(" and uo.update_time>= '"+startTime+"'");
+		}
+		if (StringUtils.isNotEmpty(endTime)) {
+			sql.append(" and  uo.update_time<= '"+endTime+"' ");
+		}
+		 return getJdbcTemplate().queryForObject(sql.toString(), Integer.class);
 	}
 
 	@Override
-	public List<UserOrder> findOrderListByDealId(String dealid) {
+	public List<UserOrder> findOrderListByDealId(String dealid,String year,String month) {
 		StringBuilder sql = new StringBuilder(
 				"select * from t_yuanhe_user_order  where 1=1 ");
 		if (StringUtils.isNotEmpty(dealid)) {
 			sql.append(" and  (belongs_sales_commission='"+dealid+"' ");
 			sql.append(" or  belongs_members_commission='"+dealid+"') ");
 		}
+		if (StringUtils.isNotEmpty(year)) {
+			sql.append(" and update_time like '%"+year+"-%'");
+		}
+		if (StringUtils.isNotEmpty(month)) {
+			sql.append(" and update_time like '%-"+month+"-%'");
+		}
+		  sql.append(" order by order_id,update_time desc LIMIT 0,100");
 		return getJdbcTemplate().query(sql.toString(),new Object[]{},new UserOrderRowMapper());
 	}
 

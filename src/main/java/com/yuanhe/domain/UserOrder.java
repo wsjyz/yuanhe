@@ -37,6 +37,25 @@ public class UserOrder extends BaseDomain {
 	private String commodityPic;
 	@Column(name = "update_time", comment = "交易更新时间", length = 50)
 	private String updateTime;
+	private String belongsSalesCommissionName;
+	private String belongsMembersCommissionName;
+
+	public String getBelongsSalesCommissionName() {
+		return belongsSalesCommissionName;
+	}
+
+	public void setBelongsSalesCommissionName(String belongsSalesCommissionName) {
+		this.belongsSalesCommissionName = belongsSalesCommissionName;
+	}
+
+	public String getBelongsMembersCommissionName() {
+		return belongsMembersCommissionName;
+	}
+
+	public void setBelongsMembersCommissionName(
+			String belongsMembersCommissionName) {
+		this.belongsMembersCommissionName = belongsMembersCommissionName;
+	}
 
 	public void setUpdateTime(String updateTime) {
 		this.updateTime = updateTime;
