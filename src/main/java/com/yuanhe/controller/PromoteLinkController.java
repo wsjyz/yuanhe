@@ -1,6 +1,5 @@
 package com.yuanhe.controller;
 
-import com.yuanhe.domain.Dealers;
 import com.yuanhe.domain.PageModel;
 import com.yuanhe.domain.PromoteLinks;
 import com.yuanhe.domain.UserAccessRecord;
@@ -75,7 +74,7 @@ public class PromoteLinkController {
         String state = request.getParameter("state");
         String dealerId = request.getParameter("dealerId");
         WeixinOauth weixinOauth = new WeixinOauth();
-        WeixinOauth.AccessTokenBean accessTokenBean = weixinOauth.getOauthAccessToken(code);
+        WeixinOauth.AccessTokenBean accessTokenBean = weixinOauth.obtainOauthAccessToken(code);
         WeixinUser weixinUser = weixinOauth.getUserInfo(accessTokenBean.getAccess_token(), accessTokenBean.getOpenid());
         UserAccessRecord userAccessRecord = new UserAccessRecord();
         userAccessRecord.setAccessUrl(state);

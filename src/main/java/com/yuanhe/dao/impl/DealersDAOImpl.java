@@ -49,6 +49,18 @@ public class DealersDAOImpl extends BaseDAO implements DealersDAO {
             return null;
         }
     }
+    @Override
+    public Dealers findDealerByUnionId(String unionId) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM ");
+        sql.append(TABLE_NAME);
+        sql.append(" where union_id = ?");
+        List<Dealers> dealersList = getJdbcTemplate().query(sql.toString(),new Object[]{unionId},new DealerRowMapper());
+        if(dealersList != null && dealersList.size() > 0){
+            return dealersList.get(0);
+        }else{
+            return null;
+        }
+    }
 
     @Override
     public void updateDealerUnionId(Dealers dealers) {

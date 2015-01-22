@@ -64,7 +64,12 @@ public class DealersServiceImpl implements DealersService {
 		return dealersDAO.getYuanHeDealersId();
 	}
 
-	@Override
+    @Override
+    public Dealers findDealerByUnionId(String unionId) {
+        return dealersDAO.findDealerByUnionId(unionId);
+    }
+
+    @Override
 	public Dealers getDealersByID(String dealersId) {
 		return dealersDAO.getDealersById(dealersId);
 	}

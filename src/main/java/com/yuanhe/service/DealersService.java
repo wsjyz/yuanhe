@@ -14,6 +14,8 @@ public interface DealersService {
 
 	String getYuanHeDealersId();
 
+    Dealers findDealerByUnionId(String unionId);
+
     Dealers findDealerByMobileAndName(String mobile,String name);
 
     void updateDealerUnionId(Dealers dealers);

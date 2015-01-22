@@ -8,12 +8,10 @@ import com.yuanhe.service.DealersService;
 import com.yuanhe.service.PromoteLinksService;
 import com.yuanhe.utils.Contants;
 import com.yuanhe.utils.WeixinUtils;
-import com.yuanhe.weixin.QrcodeService;
-import com.yuanhe.weixin.UserService;
 import com.yuanhe.weixin.bean.*;
 import com.yuanhe.weixin.corp.MenuService;
 import com.yuanhe.weixin.proxy.HTTPSClient;
-import com.yuanhe.weixin.proxy.WeixinRemoteProxy;
+import com.yuanhe.weixin.util.AccessTokenBean;
 import com.yuanhe.weixin.util.MessageUtil;
 import com.yuanhe.weixin.util.WeixinOauth;
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
@@ -233,16 +232,45 @@ public class DealerController {
 
     /**
      * https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx805e0d1e1ff4c357&redirect_uri=http%3A%2F%2F115.29.47.23%3A8081%2Fyh%2Fdealer%2Foauth&response_type=code&scope=snsapi_userinfo&state=http%3A%2F%2Fwww.baidu.com#wechat_redirect
-     * @param code
-     * @param state
-     * @param model
+
      * @return
      */
     @RequestMapping(value = "/oauth")
-    public String oauth(@RequestParam String code,@RequestParam String state,Model model){
+    public String oauth(Model model,RedirectAttributes attr){
+        AccessTokenBean accessTokenBean = WeixinOauth.weixinOauthAccessTokenBean;
+        long currentTime = new Date().getTime();
+        System.out.println((accessTokenBean == null));
+        if(accessTokenBean != null){
+            System.out.println(WeixinOauth.weixinOauthAccessTokenBean.getExpires_in()+"--"+currentTime);
+        }
+        if(accessTokenBean == null  ){//这时accesstoken已经失效了，或者是第一次
+            return "/dealer/snsapi_userinfo_oauth";
+        }else{
+        //这时accesstoken并未失效，但是要获取openid，获取openid的时候，
+        // 要用刷新accesstoken的方法来获取，而不能用snsapi_base，否则acesstoken就变了，垃圾微信api
+            WeixinOauth weixinOauth = new WeixinOauth();
+            String openId = weixinOauth.refreshAccessToken(accessTokenBean.getRefresh_token());
+            WeixinUser weixinUser = weixinOauth.getUserInfo(accessTokenBean.getAccess_token(), openId);
+            if(weixinUser == null){
+            //每次刷新token的时候过期时间都是7200，并不像他说的那样有7天什么的，所以你根本没法知道什么时候到期，垃圾微信api
+                return "/dealer/snsapi_userinfo_oauth";
+            }
+            Dealers dealers = dealersService.findDealerByUnionId(weixinUser.getUnionid());
+            if(dealers != null){
+                attr.addAttribute("dealerId", dealers.getDealersId());
+                return "redirect:/promote-link/to-list";
+            }
+            model.addAttribute("unionId",weixinUser.getUnionid());
+            System.out.println("unionId is "+weixinUser.getUnionid());
+            return "/dealer/bind";
+        }
+    }
+
+    @RequestMapping(value = "/find-union-id")
+    public String findOUnionId(@RequestParam String code,@RequestParam String state,Model model){
 
         WeixinOauth weixinOauth = new WeixinOauth();
-        WeixinOauth.AccessTokenBean accessTokenBean = weixinOauth.getOauthAccessToken(code);
+        AccessTokenBean accessTokenBean = weixinOauth.obtainOauthAccessToken(code);
         WeixinUser weixinUser = weixinOauth.getUserInfo(accessTokenBean.getAccess_token(), accessTokenBean.getOpenid());
 
         model.addAttribute("unionId",weixinUser.getUnionid());

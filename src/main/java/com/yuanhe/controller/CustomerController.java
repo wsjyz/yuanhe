@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yuanhe.domain.Customer;
 import com.yuanhe.domain.PageModel;
-import com.yuanhe.domain.UserOrder;
 import com.yuanhe.service.CustomerService;
 import com.yuanhe.weixin.bean.WeixinUser;
 import com.yuanhe.weixin.util.WeixinOauth;
@@ -47,7 +46,7 @@ public class CustomerController {
 	  @RequestMapping(value = "/oauth")
 	    public String oauth(@RequestParam String code,@RequestParam String state,Model model){
 	        WeixinOauth weixinOauth = new WeixinOauth();
-	        WeixinOauth.AccessTokenBean accessTokenBean = weixinOauth.getOauthAccessToken(code);
+	        WeixinOauth.AccessTokenBean accessTokenBean = weixinOauth.obtainOauthAccessToken(code);
 	        WeixinUser weixinUser = weixinOauth.getUserInfo(accessTokenBean.getAccess_token(), accessTokenBean.getOpenid());
 	        model.addAttribute("unionId",weixinUser.getUnionid());
 	        return "/customer/orderCustomer";

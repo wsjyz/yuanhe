@@ -124,7 +124,7 @@ public class StringUtil {
         return resultString;
     }
     public static void main(String[] args) {
-        String apps = "2E669A6340E94F67B5DBAE53A84572DF";//yufa
+        String apps = "D68B5CD0B207420F9709FAFCE65F4F5D";//yufa
         String chat_sign = apps+"|/v1/uc/user/isLoginAndReturnOpenUser|"+apps;
         String record_sign = apps+"|/v1/im/message/listPrivateMsgs|"+apps;
         String msg_sign = apps+"|/v1/im/message/savePrivateMsgs|"+apps;
