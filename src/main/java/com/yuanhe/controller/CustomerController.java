@@ -2,6 +2,7 @@ package com.yuanhe.controller;
 
 import java.util.List;
 
+import com.yuanhe.weixin.util.AccessTokenBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,7 +47,7 @@ public class CustomerController {
 	  @RequestMapping(value = "/oauth")
 	    public String oauth(@RequestParam String code,@RequestParam String state,Model model){
 	        WeixinOauth weixinOauth = new WeixinOauth();
-	        WeixinOauth.AccessTokenBean accessTokenBean = weixinOauth.obtainOauthAccessToken(code);
+	        AccessTokenBean accessTokenBean = weixinOauth.obtainOauthAccessToken(code);
 	        WeixinUser weixinUser = weixinOauth.getUserInfo(accessTokenBean.getAccess_token(), accessTokenBean.getOpenid());
 	        model.addAttribute("unionId",weixinUser.getUnionid());
 	        return "/customer/orderCustomer";

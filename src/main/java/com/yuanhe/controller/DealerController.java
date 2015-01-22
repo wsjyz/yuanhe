@@ -239,10 +239,7 @@ public class DealerController {
     public String oauth(Model model,RedirectAttributes attr){
         AccessTokenBean accessTokenBean = WeixinOauth.weixinOauthAccessTokenBean;
         long currentTime = new Date().getTime();
-        System.out.println((accessTokenBean == null));
-        if(accessTokenBean != null){
-            System.out.println(WeixinOauth.weixinOauthAccessTokenBean.getExpires_in()+"--"+currentTime);
-        }
+
         if(accessTokenBean == null  ){//这时accesstoken已经失效了，或者是第一次
             return "/dealer/snsapi_userinfo_oauth";
         }else{

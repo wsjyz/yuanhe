@@ -6,6 +6,7 @@ import com.yuanhe.domain.UserAccessRecord;
 import com.yuanhe.service.PromoteLinksService;
 import com.yuanhe.service.UserAccessRecordService;
 import com.yuanhe.weixin.bean.WeixinUser;
+import com.yuanhe.weixin.util.AccessTokenBean;
 import com.yuanhe.weixin.util.WeixinOauth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -74,7 +75,7 @@ public class PromoteLinkController {
         String state = request.getParameter("state");
         String dealerId = request.getParameter("dealerId");
         WeixinOauth weixinOauth = new WeixinOauth();
-        WeixinOauth.AccessTokenBean accessTokenBean = weixinOauth.obtainOauthAccessToken(code);
+        AccessTokenBean accessTokenBean = weixinOauth.obtainOauthAccessToken(code);
         WeixinUser weixinUser = weixinOauth.getUserInfo(accessTokenBean.getAccess_token(), accessTokenBean.getOpenid());
         UserAccessRecord userAccessRecord = new UserAccessRecord();
         userAccessRecord.setAccessUrl(state);
