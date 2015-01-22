@@ -248,7 +248,7 @@ public class DealerController {
             WeixinOauth weixinOauth = new WeixinOauth();
             String openId = weixinOauth.refreshAccessToken(accessTokenBean.getRefresh_token());
             WeixinUser weixinUser = weixinOauth.getUserInfo(accessTokenBean.getAccess_token(), openId);
-            if(weixinUser == null){
+            if(weixinUser == null || StringUtils.isBlank(weixinUser.getUnionid())){
             //每次刷新token的时候过期时间都是7200，并不像他说的那样有7天什么的，所以你根本没法知道什么时候到期，垃圾微信api
                 return "/dealer/snsapi_userinfo_oauth";
             }
