@@ -1,5 +1,7 @@
 package com.yuanhe.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,13 @@ public class UserOrderServiceImpl implements UserOrderService {
 	@Override
 	public List<UserOrder> findOrderListByDealId(String dealid,String year,String month) {
 		return userOrderDAO.findOrderListByDealId(dealid,year,month);
+	}
+
+	@Override
+	public List<UserOrder> findOrderListByDealIdAndStartDay(String dealId,
+			Date startTime, Date endTime) {
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return userOrderDAO.findOrderListByDealIdAndStartDay(dealId,sdf.format(startTime),sdf.format(endTime));
 	}
 
 }
