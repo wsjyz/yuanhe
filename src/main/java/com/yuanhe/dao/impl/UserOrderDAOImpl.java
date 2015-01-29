@@ -223,4 +223,22 @@ public class UserOrderDAOImpl extends BaseDAO implements UserOrderDAO {
 		return getJdbcTemplate().query(sql.toString(),new Object[]{},new UserOrderRowMapper());
 	}
 
+	@Override
+	public List<UserOrder> findOrderListByDealIdAndStartDay(String dealId,
+			String startTime, String endTime) {
+		StringBuilder sql = new StringBuilder(
+				"select uo.*,deal.dealers_name as belongs_sales_name,deal1.dealers_name as belongs_members_name from t_yuanhe_user_order  uo "
+				+ "left join t_yuanhe_dealers deal on deal.dealers_id=uo.belongs_sales_commission "
+				+ " left join t_yuanhe_dealers deal1 on deal1.dealers_id=uo.belongs_members_commission ");
+		sql.append(" where  1=1 ");
+		if (StringUtils.isNotEmpty(startTime)) {
+			sql.append(" and uo.update_time>= '"+startTime+"'");
+		}
+		if (StringUtils.isNotEmpty(endTime)) {
+			sql.append(" and  uo.update_time<= '"+endTime+"' ");
+		}
+		  sql.append(" order by  uo.order_id, uo.update_time desc");
+	   return getJdbcTemplate().query(sql.toString(),new UserOrderByDealRowMapper());
+	}
+
 }

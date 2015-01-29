@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.yuanhe.domain.Customer;
 import com.yuanhe.domain.Dealers;
 import com.yuanhe.domain.PageModel;
+import com.yuanhe.domain.UserOrder;
 import com.yuanhe.service.CustomerService;
 import com.yuanhe.service.DealersService;
 import com.yuanhe.weixin.bean.WeixinUser;
@@ -92,11 +93,12 @@ public class CustomerController {
 	    public String tocustomerByPhone(@RequestParam String dealerId,Model model){
 	        model.addAttribute("dealerId",dealerId);
 	        return "/customer/phonecustomerList";
-	    }
-	   @ResponseBody
-	   @RequestMapping(value = "/find-customerlist")
-	   public List<Customer> findList(@RequestParam String dealerId){
-	       List<Customer> customers = customerService.findCustomerListByDealerId(dealerId);
-	       return customers;
-	   }
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/find-customerlist")
+	public List<Customer> findList(@RequestParam String dealerId) {
+		List<Customer> customers = customerService.findCustomerListByDealerId(dealerId);
+		return customers;
+	}
 }

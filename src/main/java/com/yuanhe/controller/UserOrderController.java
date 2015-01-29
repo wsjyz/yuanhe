@@ -134,4 +134,10 @@ public class UserOrderController {
 		}
 		return userOrders;
 	}
+	@ResponseBody
+	@RequestMapping(value = "/findOrderList")
+	public List<UserOrder> findOrderListByDealIdAndStartDay(@RequestParam String dealerId,@RequestParam String startTime,@RequestParam String endTime){
+		return userOrderService.findOrderListByDealIdAndStartDay(dealerId, startTime, endTime);
+	}
+	
 }
